@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\texts\text1.txt" Link="texts\text1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\texts\text2.txt" Link="texts\text2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\textanalytics.lib\textanalytics.lib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="security\" />
+    <Folder Include="texts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\security\textAnalytics.apiKey.private" Link="security\textAnalytics.apiKey.private">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\security\textAnalytics.apiUrl.private" Link="security\textAnalytics.apiUrl.private">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

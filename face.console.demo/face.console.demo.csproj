@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\images\image1.jpg" Link="images\image1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\images\image2.jpg" Link="images\image2.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="images\" />
+    <Folder Include="security\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\security\face.apiKey.private" Link="security\face.apiKey.private">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\security\face.apiUrl.private" Link="security\face.apiUrl.private">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,67 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2048
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Face", "Face", "{12F2228B-C665-4E1D-8B3B-4B129879CA6B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "face.lib", "face.lib\face.lib.csproj", "{90901FCA-A3F6-42BE-9795-D3A23D83CDB0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "face.console", "face.console\face.console.csproj", "{9AC4439B-7CCB-4AEB-93AC-89AD46BB3922}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "face.lib.tests", "face.lib.tests\face.lib.tests.csproj", "{7D896F7D-9108-43CA-987D-17B59D29AC02}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "face.console.demo", "face.console.demo\face.console.demo.csproj", "{A026C19C-3D9C-40FE-9553-CFB67E4A9C35}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Text", "Text", "{812BF421-1121-4D55-B69F-19701AD1BE22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "textanalytics.lib", "textanalytics.lib\textanalytics.lib.csproj", "{EC22ED33-1F71-4B1B-A0FE-53660F4C5570}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "textanalytics.console", "textanalytics.console\textanalytics.console.csproj", "{D1143D54-2D35-44CD-8834-94A389B3911E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90901FCA-A3F6-42BE-9795-D3A23D83CDB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90901FCA-A3F6-42BE-9795-D3A23D83CDB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90901FCA-A3F6-42BE-9795-D3A23D83CDB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90901FCA-A3F6-42BE-9795-D3A23D83CDB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AC4439B-7CCB-4AEB-93AC-89AD46BB3922}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AC4439B-7CCB-4AEB-93AC-89AD46BB3922}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AC4439B-7CCB-4AEB-93AC-89AD46BB3922}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AC4439B-7CCB-4AEB-93AC-89AD46BB3922}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D896F7D-9108-43CA-987D-17B59D29AC02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D896F7D-9108-43CA-987D-17B59D29AC02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D896F7D-9108-43CA-987D-17B59D29AC02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D896F7D-9108-43CA-987D-17B59D29AC02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A026C19C-3D9C-40FE-9553-CFB67E4A9C35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A026C19C-3D9C-40FE-9553-CFB67E4A9C35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A026C19C-3D9C-40FE-9553-CFB67E4A9C35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A026C19C-3D9C-40FE-9553-CFB67E4A9C35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC22ED33-1F71-4B1B-A0FE-53660F4C5570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC22ED33-1F71-4B1B-A0FE-53660F4C5570}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC22ED33-1F71-4B1B-A0FE-53660F4C5570}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC22ED33-1F71-4B1B-A0FE-53660F4C5570}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1143D54-2D35-44CD-8834-94A389B3911E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1143D54-2D35-44CD-8834-94A389B3911E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1143D54-2D35-44CD-8834-94A389B3911E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1143D54-2D35-44CD-8834-94A389B3911E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{90901FCA-A3F6-42BE-9795-D3A23D83CDB0} = {12F2228B-C665-4E1D-8B3B-4B129879CA6B}
+		{9AC4439B-7CCB-4AEB-93AC-89AD46BB3922} = {12F2228B-C665-4E1D-8B3B-4B129879CA6B}
+		{7D896F7D-9108-43CA-987D-17B59D29AC02} = {12F2228B-C665-4E1D-8B3B-4B129879CA6B}
+		{A026C19C-3D9C-40FE-9553-CFB67E4A9C35} = {12F2228B-C665-4E1D-8B3B-4B129879CA6B}
+		{EC22ED33-1F71-4B1B-A0FE-53660F4C5570} = {812BF421-1121-4D55-B69F-19701AD1BE22}
+		{D1143D54-2D35-44CD-8834-94A389B3911E} = {812BF421-1121-4D55-B69F-19701AD1BE22}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F12E0B79-AA07-4762-8B13-AC0F2EFF7DEA}
+	EndGlobalSection
+EndGlobal
