@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="security\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\security\bingSpellcheck.apiKey.private" Link="security\bingSpellcheck.apiKey.private">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\security\luis.apiKey.private" Link="security\luis.apiKey.private">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\security\luis.apiUrl.private" Link="security\luis.apiUrl.private">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\security\luis.appId.private" Link="security\luis.appId.private">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\luis.lib\luis.lib.csproj" />
+  </ItemGroup>
+
+</Project>

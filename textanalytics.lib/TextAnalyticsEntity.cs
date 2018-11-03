@@ -10,6 +10,8 @@ namespace textanalytics.lib
 
 		public List<TextAnalyticsEntityMatch> Matches { get; set; }
 
+		public string Type {get; set;}
+
 		public string WikipediaId { get; set; }
 		public string WikipediaLanguage { get; set; }
 		public string WikipediaUrl { get; set; }

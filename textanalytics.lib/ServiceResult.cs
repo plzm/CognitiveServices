@@ -15,7 +15,11 @@ namespace textanalytics.lib
 
 		public string ToJson()
 		{
-			return JsonConvert.SerializeObject(this);
+			JsonSerializerSettings settings = new JsonSerializerSettings();
+			settings.Formatting = Formatting.Indented;
+			settings.NullValueHandling = NullValueHandling.Include;
+
+			return JsonConvert.SerializeObject(this, settings);
 		}
 	}
 }

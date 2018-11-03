@@ -46,6 +46,9 @@ namespace textanalytics.console
 
 			Console.WriteLine();
 			Console.WriteLine();
+
+			Console.WriteLine("Done - press any key to exit");
+			Console.ReadKey();
 		}
 	}
 }

@@ -102,7 +102,7 @@ namespace face.lib
 		/// </summary>
 		/// <param name="imageBytes">Local file path</param>
 		/// <returns></returns>
-		public async Task<ServiceResult> ProcessImageAsByteArray(byte[] imageBytes)
+		internal async Task<ServiceResult> ProcessImageAsByteArray(byte[] imageBytes)
 		{
 			ServiceResult result = new ServiceResult();
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace face.lib
 {
@@ -14,7 +15,11 @@ namespace face.lib
 
 		public string ToJson()
 		{
-			return JsonConvert.SerializeObject(this);
+			JsonSerializerSettings settings = new JsonSerializerSettings();
+			settings.Formatting = Formatting.Indented;
+			settings.NullValueHandling = NullValueHandling.Include;
+
+			return JsonConvert.SerializeObject(this, settings);
 		}
 	}
 }
