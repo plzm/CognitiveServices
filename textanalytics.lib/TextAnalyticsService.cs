@@ -79,6 +79,8 @@ namespace textanalytics.lib
 
 			result.Documents.Add(doc);
 
+			result.Succeeded = (result.Errors.Count == 0);
+
 			return result;
 		}
 

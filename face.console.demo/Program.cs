@@ -13,10 +13,10 @@ namespace face.demoapp
 
 			Demo demo = new Demo(apiUrl, apiKey);
 
-			Console.WriteLine("Face API - using image URLs");
-			demo.RunWithUrls().Wait();
-			Console.WriteLine("Press any key to continue");
-			Console.ReadKey();
+			//Console.WriteLine("Face API - using image URLs");
+			//demo.RunWithUrls().Wait();
+			//Console.WriteLine("Press any key to continue");
+			//Console.ReadKey();
 
 			Console.WriteLine();
 			Console.WriteLine("Face API - using image files");

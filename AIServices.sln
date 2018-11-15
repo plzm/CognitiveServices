@@ -21,9 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "textanalytics.console", "te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Luis", "Luis", "{3609C1CC-1579-4D43-B931-2B5211002C71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "luis.lib", "luis.lib\luis.lib.csproj", "{9DB35642-2934-4824-B31E-C0A3B7A2E65D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "luis.lib", "luis.lib\luis.lib.csproj", "{9DB35642-2934-4824-B31E-C0A3B7A2E65D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "luis.console", "luis.console\luis.console.csproj", "{957BCA77-32B8-4499-8CCA-5F7AD792308E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "luis.console", "luis.console\luis.console.csproj", "{957BCA77-32B8-4499-8CCA-5F7AD792308E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
