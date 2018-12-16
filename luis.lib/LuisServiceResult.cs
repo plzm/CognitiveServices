@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace luis.lib
 {
-	public class ServiceResult
+	public class LuisServiceResult
 	{
 		[JsonProperty(PropertyName = "succeeded")]
 		public bool Succeeded { get; set; } = false;
@@ -25,7 +25,7 @@ namespace luis.lib
 		public List<LuisEntity> Entities { get; set; }
 
 		[JsonProperty(PropertyName = "sentimentAnalysis")]
-		public SentimentAnalysis SentimentAnalysis { get; set; }
+		public LuisSentimentAnalysis SentimentAnalysis { get; set; }
 
 		public string ToJson()
 		{

@@ -44,9 +44,9 @@ namespace textanalytics.lib
 
 		#endregion
 
-		public async Task<ServiceResult> Process(string text, string language = "en")
+		public async Task<TextAnalyticsServiceResult> Process(string text, string language = "en")
 		{
-			ServiceResult result = new ServiceResult();
+			TextAnalyticsServiceResult result = new TextAnalyticsServiceResult();
 
 			if (string.IsNullOrWhiteSpace(text))
 				return result;
@@ -55,10 +55,10 @@ namespace textanalytics.lib
 
 			HttpContent content = GetRequestContent(requests);
 
-			ServiceResult entitiesResult = await ProcessEntities(content);
-			ServiceResult keyPhrasesResult = await ProcessKeyPhrases(content);
-			ServiceResult languagesResult = await ProcessLanguages(content);
-			ServiceResult sentimentResult = await ProcessSentiment(content);
+			TextAnalyticsServiceResult entitiesResult = await ProcessEntities(content);
+			TextAnalyticsServiceResult keyPhrasesResult = await ProcessKeyPhrases(content);
+			TextAnalyticsServiceResult languagesResult = await ProcessLanguages(content);
+			TextAnalyticsServiceResult sentimentResult = await ProcessSentiment(content);
 
 			// Merge errors
 			result.Errors.AddRange(entitiesResult.Errors.Select(e0 => new TextAnalyticsError() { Id = e0.Id, Message = "Entities: " + e0.Message }));
@@ -84,40 +84,40 @@ namespace textanalytics.lib
 			return result;
 		}
 
-		private async Task<ServiceResult> ProcessEntities(HttpContent content)
+		private async Task<TextAnalyticsServiceResult> ProcessEntities(HttpContent content)
 		{
 			return await ProcessWorker(this.ApiUrlCommonBase + "/v2.1-preview/entities", content);
 		}
 
-		private async Task<ServiceResult> ProcessKeyPhrases(HttpContent content)
+		private async Task<TextAnalyticsServiceResult> ProcessKeyPhrases(HttpContent content)
 		{
 			return await ProcessWorker(this.ApiUrlCommonBase + "/v2.0/keyPhrases", content);
 		}
 
-		private async Task<ServiceResult> ProcessLanguages(HttpContent content)
+		private async Task<TextAnalyticsServiceResult> ProcessLanguages(HttpContent content)
 		{
 			return await ProcessWorker(this.ApiUrlCommonBase + "/v2.0/languages", content);
 		}
 
-		private async Task<ServiceResult> ProcessSentiment(HttpContent content)
+		private async Task<TextAnalyticsServiceResult> ProcessSentiment(HttpContent content)
 		{
 			return await ProcessWorker(this.ApiUrlCommonBase + "/v2.0/sentiment", content);
 		}
 
-		private async Task<ServiceResult> ProcessWorker(string apiUrl, HttpContent content)
+		private async Task<TextAnalyticsServiceResult> ProcessWorker(string apiUrl, HttpContent content)
 		{
 			HttpClient httpClient = GetHttpClient(apiUrl);
 
 			HttpResponseMessage response = await httpClient.PostAsync(string.Empty, content);
 
-			ServiceResult result = await GetResult(response);
+			TextAnalyticsServiceResult result = await GetResult(response);
 
 			return result;
 		}
 
-		private async Task<ServiceResult> GetResult(HttpResponseMessage response)
+		private async Task<TextAnalyticsServiceResult> GetResult(HttpResponseMessage response)
 		{
-			ServiceResult result = null;
+			TextAnalyticsServiceResult result = null;
 
 			if (response == null || !response.IsSuccessStatusCode)
 				return result;
@@ -126,7 +126,7 @@ namespace textanalytics.lib
 			{
 				string responseContent = await response.Content.ReadAsStringAsync();
 
-				result = JsonConvert.DeserializeObject<ServiceResult>(responseContent);
+				result = JsonConvert.DeserializeObject<TextAnalyticsServiceResult>(responseContent);
 
 				result.Succeeded = response.IsSuccessStatusCode;
 				result.ServiceMessage = response.ReasonPhrase;

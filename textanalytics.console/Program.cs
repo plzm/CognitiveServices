@@ -27,7 +27,7 @@ namespace textanalytics.console
 
 			string text1 = File.ReadAllText("texts/text1.txt");
 
-			ServiceResult result1 = await svc.Process(text1);
+			TextAnalyticsServiceResult result1 = await svc.Process(text1);
 			string json1 = result1.ToJson();
 			Console.WriteLine(json1);
 
@@ -40,7 +40,7 @@ namespace textanalytics.console
 
 			string text2 = File.ReadAllText("texts/text2.txt");
 
-			ServiceResult result2 = await svc.Process(text2);
+			TextAnalyticsServiceResult result2 = await svc.Process(text2);
 			string json2 = result2.ToJson();
 			Console.WriteLine(json2);
 

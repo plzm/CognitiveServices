@@ -25,17 +25,17 @@ namespace luis.console
 			LuisService svc = new LuisService(apiUrl, apiKey, appId, spellCheckKey);
 
 			string query1 = "I want to drink latte";
-			ServiceResult result1 = await svc.Query(query1);
+			LuisServiceResult result1 = await svc.Query(query1);
 			Console.WriteLine(result1.ToJson());
 			Console.WriteLine();
 
 			string query2 = "I LOVE coffee! I can't wait to drink more!!";
-			ServiceResult result2 = await svc.Query(query2);
+			LuisServiceResult result2 = await svc.Query(query2);
 			Console.WriteLine(result2.ToJson());
 			Console.WriteLine();
 
 			string query3 = "I am SO HUNGRY - need food!";
-			ServiceResult result3 = await svc.Query(query3);
+			LuisServiceResult result3 = await svc.Query(query3);
 			Console.WriteLine(result3.ToJson());
 			Console.WriteLine();
 

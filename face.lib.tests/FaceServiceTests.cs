@@ -78,7 +78,7 @@ namespace face.lib.tests
 			FaceService svc = new FaceService();
 
 			// Act
-			ServiceResult result = await svc.ProcessImageAtLocal(filePath);
+			FaceServiceResult result = await svc.ProcessImageAtLocal(filePath);
 
 			// Assert
 			Assert.NotNull(result);
@@ -93,7 +93,7 @@ namespace face.lib.tests
 			FaceService svc = new FaceService();
 
 			// Act
-			ServiceResult result = await svc.ProcessImageAsByteArray(bytes);
+			FaceServiceResult result = await svc.ProcessImageAsByteArray(bytes);
 
 			// Assert
 			Assert.NotNull(result);
@@ -108,7 +108,7 @@ namespace face.lib.tests
 			FaceService svc = new FaceService();
 
 			// Act
-			ServiceResult result = await svc.ProcessImageAsByteArray(bytes);
+			FaceServiceResult result = await svc.ProcessImageAsByteArray(bytes);
 
 			// Assert
 			Assert.NotNull(result);
@@ -125,7 +125,7 @@ namespace face.lib.tests
 			FaceService svc = new FaceService();
 
 			// Act
-			ServiceResult result = await svc.ProcessImageAtUrl(uri);
+			FaceServiceResult result = await svc.ProcessImageAtUrl(uri);
 
 			// Assert
 			Assert.NotNull(result);
@@ -140,7 +140,7 @@ namespace face.lib.tests
 			FaceService svc = new FaceService();
 
 			// Act
-			ServiceResult result = await svc.GetFaceResult(null);
+			FaceServiceResult result = await svc.GetFaceResult(null);
 
 			// Assert
 			Assert.NotNull(result);

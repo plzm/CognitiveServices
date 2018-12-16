@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace luis.lib
 {
-	public class SentimentAnalysis
+	public class LuisSentimentAnalysis
 	{
 		[JsonProperty(PropertyName = "label")]
 		public string Label { get; set; }

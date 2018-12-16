@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace textanalytics.lib
+namespace face.lib
 {
-	public class ServiceResult
+	public class FaceServiceResult
 	{
 		public bool Succeeded { get; set; } = false;
 
 		public string ServiceMessage { get; set; }
 
-		public List<TextAnalyticsDocument> Documents { get; set; } = new List<TextAnalyticsDocument>();
-		public List<TextAnalyticsError> Errors { get; set; } = new List<TextAnalyticsError>();
+		public List<FaceResult> Faces { get; set; }
 
 		public string ToJson()
 		{

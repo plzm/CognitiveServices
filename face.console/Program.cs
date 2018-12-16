@@ -24,16 +24,16 @@ namespace face.console
 			FaceService svc = new FaceService(apiUrl, apiKey);
 
 			// Local File
-			ServiceResult result1local = await svc.ProcessImageAtLocal("images/image1.jpg");
+			FaceServiceResult result1local = await svc.ProcessImageAtLocal("images/image1.jpg");
 
 			// Local File
-			ServiceResult result2local = await svc.ProcessImageAtLocal("images/image2.jpg");
+			FaceServiceResult result2local = await svc.ProcessImageAtLocal("images/image2.jpg");
 
 			// URL
-			ServiceResult result1url = await svc.ProcessImageAtUrl("https://destinonegocio.com/wp-content/uploads/2015/12/ico-destinonegocio-empowerment-istock-getty-images-1030x696.jpg");
+			FaceServiceResult result1url = await svc.ProcessImageAtUrl("https://destinonegocio.com/wp-content/uploads/2015/12/ico-destinonegocio-empowerment-istock-getty-images-1030x696.jpg");
 
 			// URL
-			ServiceResult result2url = await svc.ProcessImageAtUrl("https://i.ytimg.com/vi/R_CYkvXdYXE/maxresdefault.jpg");
+			FaceServiceResult result2url = await svc.ProcessImageAtUrl("https://i.ytimg.com/vi/R_CYkvXdYXE/maxresdefault.jpg");
 		}
 	}
 }

@@ -70,9 +70,9 @@ namespace luis.lib
 
 		#endregion
 
-		public async Task<ServiceResult> Query(string queryText)
+		public async Task<LuisServiceResult> Query(string queryText)
 		{
-			ServiceResult result = null;
+			LuisServiceResult result = null;
 
 			if (string.IsNullOrWhiteSpace(queryText))
 				return null;
@@ -85,7 +85,7 @@ namespace luis.lib
 
 				string json = await response.Content.ReadAsStringAsync();
 
-				result = JsonConvert.DeserializeObject<ServiceResult>(json);
+				result = JsonConvert.DeserializeObject<LuisServiceResult>(json);
 
 				result.Succeeded = response.IsSuccessStatusCode;
 				result.ServiceMessage = response.ReasonPhrase;

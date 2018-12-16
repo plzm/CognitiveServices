@@ -71,9 +71,9 @@ namespace face.lib
 		/// </summary>
 		/// <param name="localImagePath">Local file path</param>
 		/// <returns></returns>
-		public async Task<ServiceResult> ProcessImageAtLocal(string localImagePath)
+		public async Task<FaceServiceResult> ProcessImageAtLocal(string localImagePath)
 		{
-			ServiceResult result = new ServiceResult();
+			FaceServiceResult result = new FaceServiceResult();
 
 			if (string.IsNullOrWhiteSpace(localImagePath) || !File.Exists(localImagePath))
 				return result;
@@ -102,9 +102,9 @@ namespace face.lib
 		/// </summary>
 		/// <param name="imageBytes">Local file path</param>
 		/// <returns></returns>
-		internal async Task<ServiceResult> ProcessImageAsByteArray(byte[] imageBytes)
+		internal async Task<FaceServiceResult> ProcessImageAsByteArray(byte[] imageBytes)
 		{
-			ServiceResult result = new ServiceResult();
+			FaceServiceResult result = new FaceServiceResult();
 
 			if (imageBytes == null || imageBytes.Length == 0)
 				return result;
@@ -133,9 +133,9 @@ namespace face.lib
 		/// </summary>
 		/// <param name="imageUrl"></param>
 		/// <returns></returns>
-		public async Task<ServiceResult> ProcessImageAtUrl(string imageUrl)
+		public async Task<FaceServiceResult> ProcessImageAtUrl(string imageUrl)
 		{
-			ServiceResult result = new ServiceResult();
+			FaceServiceResult result = new FaceServiceResult();
 
 			if (string.IsNullOrWhiteSpace(imageUrl))
 				return result;
@@ -162,9 +162,9 @@ namespace face.lib
 			return result;
 		}
 
-		private async Task<ServiceResult> GetFaceResult(HttpResponseMessage response)
+		private async Task<FaceServiceResult> GetFaceResult(HttpResponseMessage response)
 		{
-			ServiceResult result = new ServiceResult();
+			FaceServiceResult result = new FaceServiceResult();
 
 			if (response == null)
 				return result;

@@ -25,6 +25,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "luis.lib", "luis.lib\luis.l
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "luis.console", "luis.console\luis.console.csproj", "{957BCA77-32B8-4499-8CCA-5F7AD792308E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Video", "Video", "{300AF410-176B-4943-8B15-5F440B8D97ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "videoindexer.lib", "videoindexer.lib\videoindexer.lib.csproj", "{A191537E-4F5E-4C1C-9964-4EF956CAB983}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "videoindexer.console", "videoindexer.console\videoindexer.console.csproj", "{15373467-2062-4175-9577-590A16A1A034}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +69,14 @@ Global
 		{957BCA77-32B8-4499-8CCA-5F7AD792308E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{957BCA77-32B8-4499-8CCA-5F7AD792308E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{957BCA77-32B8-4499-8CCA-5F7AD792308E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A191537E-4F5E-4C1C-9964-4EF956CAB983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A191537E-4F5E-4C1C-9964-4EF956CAB983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A191537E-4F5E-4C1C-9964-4EF956CAB983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A191537E-4F5E-4C1C-9964-4EF956CAB983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15373467-2062-4175-9577-590A16A1A034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15373467-2062-4175-9577-590A16A1A034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15373467-2062-4175-9577-590A16A1A034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15373467-2062-4175-9577-590A16A1A034}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +90,8 @@ Global
 		{D1143D54-2D35-44CD-8834-94A389B3911E} = {812BF421-1121-4D55-B69F-19701AD1BE22}
 		{9DB35642-2934-4824-B31E-C0A3B7A2E65D} = {3609C1CC-1579-4D43-B931-2B5211002C71}
 		{957BCA77-32B8-4499-8CCA-5F7AD792308E} = {3609C1CC-1579-4D43-B931-2B5211002C71}
+		{A191537E-4F5E-4C1C-9964-4EF956CAB983} = {300AF410-176B-4943-8B15-5F440B8D97ED}
+		{15373467-2062-4175-9577-590A16A1A034} = {300AF410-176B-4943-8B15-5F440B8D97ED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F12E0B79-AA07-4762-8B13-AC0F2EFF7DEA}
