@@ -1,0 +1,26 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_EXTENSION_VERSION": "~2",
+    "WEBSITE_SITE_NAME": "[PROVIDE]",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "WEBSITE_AUTH_AUTO_AAD": "False",
+    "WEBSITE_AUTH_ENABLED": "False",
+    "REMOTEDEBUGGINGVERSION": "15.0.28010.00",
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=[PROVIDE];AccountKey=[PROVIDE]",
+    "ScmType": "None",
+    "WEBSITE_AUTH_LOGOUT_PATH": "/.auth/logout",
+    "WEBSITE_SLOT_NAME": "Production",
+    "WEBSITE_NODE_DEFAULT_VERSION": "8.11.1",
+    "StorageAccountName": "[PROVIDE]",
+    "StorageAccountKey": "[PROVIDE]",
+    "PolicyName": "[PROVIDE]",
+    "ContainerNameVideoRaw": "[PROVIDE]",
+    "ContainerNameVideoResults": "[PROVIDE]",
+    "VideoIndexerApiAccountId": "[PROVIDE]",
+    "VideoIndexerApiAzureRegion": "westus2",
+    "VideoIndexerApiKey": "[PROVIDE]",
+    "VideoIndexerApiUrl": "https://api.videoindexer.ai",
+    "APPINSIGHTS_INSTRUMENTATIONKEY": "[PROVIDE]"
+  }
+}
