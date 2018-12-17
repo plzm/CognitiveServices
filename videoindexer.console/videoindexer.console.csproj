@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\pelazem.azure.cognitive.videoindexer\videoindexer.csproj" />
+    <ProjectReference Include="..\videoindexer\videoindexer.csproj" />
   </ItemGroup>
 
 </Project>
