@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>pelazem.azure.cognitive.textanalytics</AssemblyName>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0</Version>
+    <Authors>Patrick El-Azem (www.linkedin.com/in/pelazem)</Authors>
+    <Description>A wrapper library around the Text Analytics Azure Cognitive Service.</Description>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageProjectUrl>https://github.com/plzm/azure-cognitive</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/plzm/azure-cognitive</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+</Project>

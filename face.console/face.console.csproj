@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\face.lib\face.lib.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="images\" />
     <Folder Include="security\" />
   </ItemGroup>
@@ -30,6 +26,10 @@
     <Content Include="..\security\face.apiUrl.private" Link="security\face.apiUrl.private">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\face.lib\pelazem.azure.cognitive.face.csproj" />
   </ItemGroup>
 
 </Project>

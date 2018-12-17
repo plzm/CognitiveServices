@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using luis.lib;
+using pelazem.azure.cognitive.luis;
 
 namespace luis.console
 {

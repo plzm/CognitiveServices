@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\textanalytics.lib\textanalytics.lib.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="security\" />
     <Folder Include="texts\" />
   </ItemGroup>
@@ -30,6 +26,10 @@
     <Content Include="..\security\textAnalytics.apiUrl.private" Link="security\textAnalytics.apiUrl.private">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\textanalytics.lib\pelazem.azure.cognitive.textanalytics.csproj" />
   </ItemGroup>
 
 </Project>

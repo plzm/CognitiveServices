@@ -4,6 +4,7 @@ using face.lib;
 using System.Text;
 using System.Net.Http;
 using System.Threading.Tasks;
+using pelazem.azure.cognitive.face;
 
 namespace face.lib.tests
 {

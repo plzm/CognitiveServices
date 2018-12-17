@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using face.lib;
+using pelazem.azure.cognitive.face;
 
 namespace face.console
 {

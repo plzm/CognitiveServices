@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>pelazem.azure.cognitive.luis</AssemblyName>
+    <RootNamespace>pelazem.azure.cognitive.luis</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Patrick El-Azem (www.linkedin.com/in/pelazem)</Authors>
+    <Description>A wrapper library around the LUIS Azure Cognitive Service.</Description>
+    <PackageProjectUrl>https://github.com/plzm/azure-cognitive</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/plzm/azure-cognitive</RepositoryUrl>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Version>1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+</Project>

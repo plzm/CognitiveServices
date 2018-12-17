@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using videoindexer.lib;
+using pelazem.azure.cognitive.videoindexer;
 
 namespace videoindexer.console
 {

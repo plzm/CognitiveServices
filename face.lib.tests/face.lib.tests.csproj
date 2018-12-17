@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\face.lib\face.lib.csproj" />
+    <ProjectReference Include="..\face.lib\pelazem.azure.cognitive.face.csproj" />
   </ItemGroup>
 
 </Project>
