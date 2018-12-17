@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Face", "Face", "{12F2228B-C665-4E1D-8B3B-4B129879CA6B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pelazem.azure.cognitive.face", "pelazem.azure.cognitive.face\pelazem.azure.cognitive.face.csproj", "{90901FCA-A3F6-42BE-9795-D3A23D83CDB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "face", "face\face.csproj", "{90901FCA-A3F6-42BE-9795-D3A23D83CDB0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "face.console", "face.console\face.console.csproj", "{9AC4439B-7CCB-4AEB-93AC-89AD46BB3922}"
 EndProject
@@ -15,19 +15,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "face.console.demo", "face.c
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Text", "Text", "{812BF421-1121-4D55-B69F-19701AD1BE22}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pelazem.azure.cognitive.textanalytics", "pelazem.azure.cognitive.textanalytics\pelazem.azure.cognitive.textanalytics.csproj", "{EC22ED33-1F71-4B1B-A0FE-53660F4C5570}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "textanalytics", "textanalytics\textanalytics.csproj", "{EC22ED33-1F71-4B1B-A0FE-53660F4C5570}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "textanalytics.console", "textanalytics.console\textanalytics.console.csproj", "{D1143D54-2D35-44CD-8834-94A389B3911E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Luis", "Luis", "{3609C1CC-1579-4D43-B931-2B5211002C71}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pelazem.azure.cognitive.luis", "pelazem.azure.cognitive.luis\pelazem.azure.cognitive.luis.csproj", "{9DB35642-2934-4824-B31E-C0A3B7A2E65D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "luis", "luis\luis.csproj", "{9DB35642-2934-4824-B31E-C0A3B7A2E65D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "luis.console", "luis.console\luis.console.csproj", "{957BCA77-32B8-4499-8CCA-5F7AD792308E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Video", "Video", "{300AF410-176B-4943-8B15-5F440B8D97ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pelazem.azure.cognitive.videoindexer", "pelazem.azure.cognitive.videoindexer\pelazem.azure.cognitive.videoindexer.csproj", "{A191537E-4F5E-4C1C-9964-4EF956CAB983}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "videoindexer", "videoindexer\videoindexer.csproj", "{A191537E-4F5E-4C1C-9964-4EF956CAB983}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "videoindexer.console", "videoindexer.console\videoindexer.console.csproj", "{15373467-2062-4175-9577-590A16A1A034}"
 EndProject

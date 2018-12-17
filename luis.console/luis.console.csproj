@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\pelazem.azure.cognitive.luis\pelazem.azure.cognitive.luis.csproj" />
+    <ProjectReference Include="..\pelazem.azure.cognitive.luis\luis.csproj" />
   </ItemGroup>
 
 </Project>

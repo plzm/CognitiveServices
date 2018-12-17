@@ -9,6 +9,10 @@
     <PackageProjectUrl>https://github.com/plzm/azure-cognitive</PackageProjectUrl>
     <RepositoryUrl>https://github.com/plzm/azure-cognitive</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageId>pelazem.azure.cognitive.face</PackageId>
+    <Product>pelazem.azure.cognitive.face</Product>
+    <AssemblyName>pelazem.azure.cognitive.face</AssemblyName>
+    <RootNamespace>pelazem.azure.cognitive.face</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
