@@ -191,7 +191,7 @@ namespace pelazem.azure.cognitive.videoindexer
 				if (page.NextPage.Done)
 					break;
 				else
-					skip++;
+					skip += pageSize;	// API docs WRONG. They say skip is number of pages. Wrong wrong wrong AGAIN! It's number of records to skip. Sheesh.
 			}
 
 			if (withDetailsAndInsights)

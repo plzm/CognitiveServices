@@ -17,9 +17,9 @@ namespace videoindexer.console
 		{
 			VideoIndexerService svc = new VideoIndexerService(videoIndexerApiAccountId, videoIndexerApiUrl, videoIndexerApiKey, videoIndexerApiAzureRegion);
 
-			var accounts = await svc.GetVideoIndexerApiAccounts();
+			// var accounts = await svc.GetVideoIndexerApiAccounts();
 
-			List<VideoIndexerVideo> videos = await svc.GetVideos(true, true);
+			List<VideoIndexerVideo> videos = await svc.GetVideos(false,false);
 		}
 	}
 }

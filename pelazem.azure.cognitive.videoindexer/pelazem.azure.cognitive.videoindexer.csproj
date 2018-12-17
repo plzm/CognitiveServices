@@ -5,7 +5,7 @@
     <RootNamespace>pelazem.azure.cognitive.videoindexer</RootNamespace>
     <AssemblyName>pelazem.azure.cognitive.videoindexer</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Patrick El-Azem (www.linkedin.com/in/pelazem)</Authors>
     <Description>A wrapper library around the Video Indexer Azure Cognitive Service.</Description>
     <RepositoryUrl>https://github.com/plzm/azure-cognitive</RepositoryUrl>

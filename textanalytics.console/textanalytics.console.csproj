@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\textanalytics.lib\pelazem.azure.cognitive.textanalytics.csproj" />
+    <ProjectReference Include="..\pelazem.azure.cognitive.textanalytics\pelazem.azure.cognitive.textanalytics.csproj" />
   </ItemGroup>
 
 </Project>
