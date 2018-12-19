@@ -10,7 +10,7 @@ using pelazem.azure.cognitive.videoindexer;
 
 public static async Task Run(HttpRequest req, ILogger log)
 {
-    // App settings
+	// App settings
 	string storageAccountName = Environment.GetEnvironmentVariable("StorageAccountName");
 	string storageAccountKey = Environment.GetEnvironmentVariable("StorageAccountKey");
 	string policyName = Environment.GetEnvironmentVariable("PolicyName");

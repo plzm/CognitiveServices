@@ -21,6 +21,7 @@
     "VideoIndexerApiAzureRegion": "westus2",
     "VideoIndexerApiKey": "[PROVIDE]",
     "VideoIndexerApiUrl": "https://api.videoindexer.ai",
+    "VideoIndexerCallbackUrl": "[PROVIDE]",
     "APPINSIGHTS_INSTRUMENTATIONKEY": "[PROVIDE]"
   }
 }

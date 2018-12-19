@@ -20,6 +20,8 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
 	string videoIndexerApiKey = Environment.GetEnvironmentVariable("VideoIndexerApiKey");
 	string videoIndexerApiAzureRegion = Environment.GetEnvironmentVariable("VideoIndexerApiAzureRegion");
 
+	string videoIndexerCallbackUrl = Environment.GetEnvironmentVariable("VideoIndexerCallbackUrl");
+
 	log.LogInformation(nameof(storageAccountName) + "=" + storageAccountName);
 	log.LogInformation(nameof(storageAccountKey) + "=" + storageAccountKey);
 	log.LogInformation(nameof(policyName) + "=" + policyName);
@@ -30,10 +32,10 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
 	log.LogInformation(nameof(videoIndexerApiKey) + "=" + videoIndexerApiKey);
 	log.LogInformation(nameof(videoIndexerApiAzureRegion) + "=" + videoIndexerApiAzureRegion);
 
-    log.LogInformation(nameof(eventGridEvent.Topic) + "=" + eventGridEvent.Topic);
-    log.LogInformation(nameof(eventGridEvent.Subject) + "=" + eventGridEvent.Subject);
-    log.LogInformation(nameof(eventGridEvent.EventType) + "=" + eventGridEvent.EventType);
-    log.LogInformation(nameof(eventGridEvent.EventTime) + "=" + eventGridEvent.EventTime);
+	log.LogInformation(nameof(eventGridEvent.Topic) + "=" + eventGridEvent.Topic);
+	log.LogInformation(nameof(eventGridEvent.Subject) + "=" + eventGridEvent.Subject);
+	log.LogInformation(nameof(eventGridEvent.EventType) + "=" + eventGridEvent.EventType);
+	log.LogInformation(nameof(eventGridEvent.EventTime) + "=" + eventGridEvent.EventTime);
 
 	dynamic eventPayload = JsonConvert.DeserializeObject(eventGridEvent.Data.ToString());
 
@@ -56,8 +58,6 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
         return;
     }
 
-    string callbackUrl = "https://pzvideoindexer2.azurewebsites.net/api/PersistResults";
-
     Uri uri = new Uri(url);
     string videoName = Path.GetFileName(uri.AbsolutePath);
 
@@ -71,7 +71,7 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
     // Initiate upload to the Video Indexer Cognitive Service
     VideoIndexerService videoIndexerService = new VideoIndexerService(videoIndexerApiAccountId, videoIndexerApiUrl, videoIndexerApiKey, videoIndexerApiAzureRegion);
     VideoIndexerVideoInput videoInput = new VideoIndexerVideoInput(){ Name = videoName, UrlOriginal = url, UrlVisibleToVideoIndexer = sasUrl };
-    string videoId = await videoIndexerService.UploadVideo(videoInput, string.Empty, callbackUrl);
+    string videoId = await videoIndexerService.UploadVideo(videoInput, string.Empty, videoIndexerCallbackUrl);
 
 	log.LogInformation(nameof(videoId) + "=" + videoId);
 }
