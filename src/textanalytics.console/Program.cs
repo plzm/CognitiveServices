@@ -17,17 +17,14 @@ namespace textanalytics.console
 
 		static async Task ProcessTexts()
 		{
-			string apiUrl = File.ReadAllText(@"security\textAnalytics.apiUrl.private");
-			string apiKey = File.ReadAllText(@"security\textAnalytics.apiKey.private");
+			string apiUrl = "";
+			string apiKey = "";
 
-			TextAnalyticsService svc = new TextAnalyticsService(apiUrl, apiKey);
-
-
-			Console.WriteLine("Gettysburg Address");
+			TextAnalyticsServiceClient svc = new TextAnalyticsServiceClient(apiUrl, apiKey);
 
 			string text1 = File.ReadAllText("texts/text1.txt");
 
-			TextAnalyticsServiceResult result1 = await svc.Process(text1);
+			TextAnalyticsServiceResult result1 = await svc.ProcessAsync(text1);
 			string json1 = result1.ToJson();
 			Console.WriteLine(json1);
 
@@ -35,12 +32,11 @@ namespace textanalytics.console
 			Console.WriteLine();
 
 
-
 			Console.WriteLine("George Washington Farewell Address (partial)");
 
 			string text2 = File.ReadAllText("texts/text2.txt");
 
-			TextAnalyticsServiceResult result2 = await svc.Process(text2);
+			TextAnalyticsServiceResult result2 = await svc.ProcessAsync(text2);
 			string json2 = result2.ToJson();
 			Console.WriteLine(json2);
 

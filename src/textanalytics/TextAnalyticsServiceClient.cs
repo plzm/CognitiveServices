@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace pelazem.azure.cognitive.textanalytics
 {
-	public class TextAnalyticsService
+	public class TextAnalyticsServiceClient
 	{
 		#region Variables
 
@@ -28,9 +28,9 @@ namespace pelazem.azure.cognitive.textanalytics
 
 		#region Constructors
 
-		internal TextAnalyticsService() { }
+		internal TextAnalyticsServiceClient() { }
 
-		public TextAnalyticsService(string apiUrlCommonBase, string apiKey)
+		public TextAnalyticsServiceClient(string apiUrlCommonBase, string apiKey)
 		{
 			if (string.IsNullOrWhiteSpace(apiUrlCommonBase))
 				throw new ArgumentException(apiUrlCommonBase);
@@ -44,7 +44,7 @@ namespace pelazem.azure.cognitive.textanalytics
 
 		#endregion
 
-		public async Task<TextAnalyticsServiceResult> Process(string text, string language = "en")
+		public async Task<TextAnalyticsServiceResult> ProcessAsync(string text, string language = "en")
 		{
 			TextAnalyticsServiceResult result = new TextAnalyticsServiceResult();
 

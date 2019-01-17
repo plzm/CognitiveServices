@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>pelazem.azure.cognitive.textanalytics</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0</Version>
+    <Version>1.1.0</Version>
     <Authors>Patrick El-Azem (www.linkedin.com/in/pelazem)</Authors>
     <Description>A wrapper library around the Text Analytics Azure Cognitive Service.</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
 
 </Project>
