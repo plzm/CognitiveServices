@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace pelazem.azure.cognitive.textanalytics
 {
-	public class TextAnalyticsDocument
+	public class TextAnalyticsResponse
 	{
-		public string Id { get; set; }
-		public string Text { get; set; }
-		public string Language { get; set; }
+		public TextAnalyticsRequest Request { get; internal set; }
 
-		public double Score { get; set; }
+		[JsonProperty("Score")]
+		public double SentimentScore { get; set; }
 
 		public List<TextAnalyticsEntity> Entities { get; set; } = new List<TextAnalyticsEntity>();
 

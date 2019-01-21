@@ -10,7 +10,9 @@ namespace pelazem.azure.cognitive.textanalytics
 
 		public string ServiceMessage { get; set; }
 
-		public List<TextAnalyticsDocument> Documents { get; set; } = new List<TextAnalyticsDocument>();
+		[JsonProperty("Documents")]
+		public List<TextAnalyticsResponse> Responses { get; set; } = new List<TextAnalyticsResponse>();
+
 		public List<TextAnalyticsError> Errors { get; set; } = new List<TextAnalyticsError>();
 
 		public string ToJson()

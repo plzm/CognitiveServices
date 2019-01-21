@@ -30,54 +30,73 @@ namespace pelazem.azure.cognitive.textanalytics
 
 		internal TextAnalyticsServiceClient() { }
 
-		public TextAnalyticsServiceClient(string apiUrlCommonBase, string apiKey)
+		public TextAnalyticsServiceClient(string apiEndpointUrl, string apiKey)
 		{
-			if (string.IsNullOrWhiteSpace(apiUrlCommonBase))
-				throw new ArgumentException(apiUrlCommonBase);
+			if (string.IsNullOrWhiteSpace(apiEndpointUrl))
+				throw new ArgumentException(apiEndpointUrl);
 
 			if (string.IsNullOrWhiteSpace(apiKey))
 				throw new ArgumentException(apiKey);
 
-			this.ApiUrlCommonBase = apiUrlCommonBase;
+			this.ApiUrlCommonBase = GetApiUrlCommonBase(apiEndpointUrl);
 			this.ApiKey = apiKey;
 		}
 
 		#endregion
 
-		public async Task<TextAnalyticsServiceResult> ProcessAsync(string text, string language = "en")
+		public async Task<TextAnalyticsServiceResult> ProcessAsync(string text, string language = "en", bool processSentiment = true, bool processLanguages = false, bool processKeyPhrases = false, bool processEntities = false)
 		{
 			TextAnalyticsServiceResult result = new TextAnalyticsServiceResult();
 
 			if (string.IsNullOrWhiteSpace(text))
 				return result;
 
-			List<TextAnalyticsDocument> requests = new List<TextAnalyticsDocument>() { new TextAnalyticsDocument() { Id = "1", Language = language, Text = text } };
+			TextAnalyticsRequest request = new TextAnalyticsRequest() { Id = "1", Language = language, Text = text };
+
+			TextAnalyticsRequest[] requests = { request };
 
 			HttpContent content = GetRequestContent(requests);
 
-			TextAnalyticsServiceResult entitiesResult = await ProcessEntities(content);
-			TextAnalyticsServiceResult keyPhrasesResult = await ProcessKeyPhrases(content);
-			TextAnalyticsServiceResult languagesResult = await ProcessLanguages(content);
-			TextAnalyticsServiceResult sentimentResult = await ProcessSentiment(content);
+			TextAnalyticsResponse response = new TextAnalyticsResponse();
+			response.Request = request;
 
-			// Merge errors
-			result.Errors.AddRange(entitiesResult.Errors.Select(e0 => new TextAnalyticsError() { Id = e0.Id, Message = "Entities: " + e0.Message }));
-			result.Errors.AddRange(keyPhrasesResult.Errors.Select(e0 => new TextAnalyticsError() { Id = e0.Id, Message = "Key Phrases: " + e0.Message }));
-			result.Errors.AddRange(languagesResult.Errors.Select(e0 => new TextAnalyticsError() { Id = e0.Id, Message = "Languages: " + e0.Message }));
-			result.Errors.AddRange(sentimentResult.Errors.Select(e0 => new TextAnalyticsError() { Id = e0.Id, Message = "Sentiment: " + e0.Message }));
+			if (processSentiment)
+			{
+				TextAnalyticsServiceResult sentimentResult = await ProcessSentiment(content);
 
-			// Merge documents - since we're calling for exactly one (ID = 1 in this method where we merge the four API endpoints' results)
-			TextAnalyticsDocument doc = new TextAnalyticsDocument();
-			doc.Id = sentimentResult.Documents[0].Id;
-			doc.Language = language;
-			doc.Text = text;
+				result.Errors.AddRange(sentimentResult.Errors.Select(e0 => new TextAnalyticsError() { Id = e0.Id, Message = "Sentiment: " + e0.Message }));
 
-			doc.Entities.AddRange(entitiesResult.Documents[0].Entities);
-			doc.KeyPhrases.AddRange(keyPhrasesResult.Documents[0].KeyPhrases);
-			doc.DetectedLanguages.AddRange(languagesResult.Documents[0].DetectedLanguages);
-			doc.Score = sentimentResult.Documents[0].Score;
+				response.SentimentScore = sentimentResult.Responses[0].SentimentScore;
+			}
 
-			result.Documents.Add(doc);
+			if (processLanguages)
+			{
+				TextAnalyticsServiceResult languagesResult = await ProcessLanguages(content);
+
+				result.Errors.AddRange(languagesResult.Errors.Select(e0 => new TextAnalyticsError() { Id = e0.Id, Message = "Languages: " + e0.Message }));
+
+				response.DetectedLanguages.AddRange(languagesResult.Responses[0].DetectedLanguages);
+			}
+
+			if (processKeyPhrases)
+			{
+				TextAnalyticsServiceResult keyPhrasesResult = await ProcessKeyPhrases(content);
+
+				result.Errors.AddRange(keyPhrasesResult.Errors.Select(e0 => new TextAnalyticsError() { Id = e0.Id, Message = "Key Phrases: " + e0.Message }));
+
+				response.KeyPhrases.AddRange(keyPhrasesResult.Responses[0].KeyPhrases);
+			}
+
+			if (processEntities)
+			{
+				TextAnalyticsServiceResult entitiesResult = await ProcessEntities(content);
+
+				result.Errors.AddRange(entitiesResult.Errors.Select(e0 => new TextAnalyticsError() { Id = e0.Id, Message = "Entities: " + e0.Message }));
+
+				response.Entities.AddRange(entitiesResult.Responses[0].Entities);
+			}
+
+			result.Responses.Add(response);
 
 			result.Succeeded = (result.Errors.Count == 0);
 
@@ -141,7 +160,7 @@ namespace pelazem.azure.cognitive.textanalytics
 			return result;
 		}
 
-		private HttpContent GetRequestContent(List<TextAnalyticsDocument> documents)
+		private HttpContent GetRequestContent(IEnumerable<TextAnalyticsRequest> documents)
 		{
 			HttpContent result = null;
 
@@ -173,6 +192,21 @@ namespace pelazem.azure.cognitive.textanalytics
 			_httpClients.Add(apiUrl, result);
 
 			return result;
+		}
+
+		private string GetApiUrlCommonBase(string apiEndpointUrl)
+		{
+			string apiUrlCommonBase = apiEndpointUrl.Trim();
+
+			// Remove trailing slash, if present
+			if (apiUrlCommonBase.EndsWith("/"))
+				apiUrlCommonBase = apiUrlCommonBase.Substring(0, apiUrlCommonBase.Length - 1);
+
+			// Remove numeric API version specifier, if present - since we will use multiple versions when combining different API functions
+			if (char.IsDigit(apiUrlCommonBase.Last()))
+				apiUrlCommonBase = apiUrlCommonBase.Substring(0, apiUrlCommonBase.Length - 5);
+
+			return apiUrlCommonBase;
 		}
 	}
 }
