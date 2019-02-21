@@ -20,7 +20,7 @@ namespace pelazem.azure.cognitive.videoindexer
 		public bool IsOwned { get; set; } // Also at Get-Index root
 		public bool IsEditable { get; set; } // Also at Get-Index root
 		public bool IsBase { get; set; } // Also at Get-Index root
-		public int DurationInSeconds { get; set; } // Also at Get-Index root
+		public double DurationInSeconds { get; set; } // Also at Get-Index root
 
 		// Main properties from List-Videos output: https://api-portal.videoindexer.ai/docs/services/operations/operations/List-videos?
 		public string Partition { get; set; } // Also at Get-Index root

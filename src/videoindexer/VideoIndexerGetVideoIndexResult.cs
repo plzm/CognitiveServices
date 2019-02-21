@@ -20,7 +20,7 @@ namespace pelazem.azure.cognitive.videoindexer
 		public bool IsOwned { get; set; } // Also at Get-Index root
 		public bool IsEditable { get; set; } // Also at Get-Index root
 		public bool IsBase { get; set; } // Also at Get-Index root
-		public int DurationInSeconds { get; set; } // Also at Get-Index root
+		public double DurationInSeconds { get; set; } // Also at Get-Index root
 
 		public SummarizedInsights SummarizedInsights { get; set; }
 

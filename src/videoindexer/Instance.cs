@@ -4,5 +4,6 @@
 	{
 		public virtual string Start { get; set; }
 		public virtual string End { get; set; }
+		public virtual string Duration { get; set; }
 	}
 }

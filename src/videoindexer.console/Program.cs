@@ -8,10 +8,15 @@ namespace videoindexer.console
 {
 	class Program
 	{
+		static string videoIndexerApiUrl = "https://api.videoindexer.ai";
+		static string videoIndexerApiAzureRegion = "westus2";
+
 		static string videoIndexerApiAccountId = "";
-		static string videoIndexerApiUrl = "";
-		static string videoIndexerApiKey = ""; // Authorization
-		static string videoIndexerApiAzureRegion = "";
+
+		// Authorization API
+		// Create a subscription here: https://api-portal.videoindexer.ai/Products/authorization
+		// Then get API key from the subscription's page 
+		static string videoIndexerApiKey = "";
 
 		static async Task Main(string[] args)
 		{
@@ -19,7 +24,9 @@ namespace videoindexer.console
 
 			// var accounts = await svc.GetVideoIndexerApiAccounts();
 
-			List<VideoIndexerVideo> videos = await svc.GetVideos(false,false);
+			List<VideoIndexerVideo> videos = await svc.GetVideos(true, true);
+
+
 		}
 	}
 }

@@ -186,12 +186,13 @@ namespace pelazem.azure.cognitive.videoindexer
 
 				VideoIndexerListVideosResult page = JsonConvert.DeserializeObject<VideoIndexerListVideosResult>(json);
 
-				interim.AddRange(page.Results);
+				if (page?.Results != null)
+					interim.AddRange(page.Results);
 
-				if (page.NextPage.Done)
+				if (page?.NextPage == null || page.NextPage.Done)
 					break;
 				else
-					skip += pageSize;	// API docs WRONG. They say skip is number of pages. Wrong wrong wrong AGAIN! It's number of records to skip. Sheesh.
+					skip += pageSize;	// API docs WRONG. They say skip is number of pages. It's number of records to skip.
 			}
 
 			if (withDetailsAndInsights)

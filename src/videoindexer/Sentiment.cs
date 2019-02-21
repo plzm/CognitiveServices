@@ -12,8 +12,8 @@ namespace pelazem.azure.cognitive.videoindexer
 		public List<AdjustedInstance> Instances { get; set; }
 
 		public string SentimentKey { get; set; }
-		public int SeenDurationRatio { get; set; }
+		public double SeenDurationRatio { get; set; }
 
-		public List<SentimentAppearance> Appearances { get; set; }
+		public List<Appearance> Appearances { get; set; }
 	}
 }
