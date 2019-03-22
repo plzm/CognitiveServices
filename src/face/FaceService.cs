@@ -17,7 +17,7 @@ namespace pelazem.azure.cognitive.face
 		#region Constants
 
 		/// Parameters we will append to the call to the cog svc endpoint to determine what the service returns
-		private const string SERVICEPARAMS = "?returnFaceId=true&returnFaceAttributes=age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise&returnFaceLandmarks=false";
+		private const string SERVICEPARAMS = "?returnFaceId=true&returnFaceAttributes=age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise&returnFaceLandmarks=true";
 
 		#endregion
 

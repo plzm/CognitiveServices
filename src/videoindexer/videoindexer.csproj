@@ -12,6 +12,7 @@
     <PackageProjectUrl>https://github.com/plzm/azure-cognitive</PackageProjectUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

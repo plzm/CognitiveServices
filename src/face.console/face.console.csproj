@@ -2,8 +2,15 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="security\**" />
+    <EmbeddedResource Remove="security\**" />
+    <None Remove="security\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\images\image1.jpg" Link="images\image1.jpg">
@@ -16,16 +23,6 @@
 
   <ItemGroup>
     <Folder Include="images\" />
-    <Folder Include="security\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="..\security\face.apiKey.private" Link="security\face.apiKey.private">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\security\face.apiUrl.private" Link="security\face.apiUrl.private">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>

@@ -24,8 +24,8 @@ namespace face.demoapp
 
 		private List<string> _imageUrls = new List<string>()
 		{
-			"https://destinonegocio.com/wp-content/uploads/2015/12/ico-destinonegocio-empowerment-istock-getty-images-1030x696.jpg",
-			"https://i.ytimg.com/vi/R_CYkvXdYXE/maxresdefault.jpg"
+			"https://pzpubliceus.blob.core.windows.net/public/34.jpg",
+			"https://pzpubliceus.blob.core.windows.net/public/38.jpg"
 		};
 
 		private HttpClient _httpClient = null;

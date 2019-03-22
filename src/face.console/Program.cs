@@ -18,22 +18,22 @@ namespace face.console
 
 		static async Task ProcessImages()
 		{
-			string apiUrl = File.ReadAllText(@"security\face.apiUrl.private");
-			string apiKey = File.ReadAllText(@"security\face.apiKey.private");
+			string apiUrl = "https://eastus.api.cognitive.microsoft.com/face/v1.0/";
+			string apiKey = "";
 
 			FaceService svc = new FaceService(apiUrl, apiKey);
 
 			// Local File
-			FaceServiceResult result1local = await svc.ProcessImageAtLocal("images/image1.jpg");
+			//FaceServiceResult result1local = await svc.ProcessImageAtLocal("images/image1.jpg");
 
 			// Local File
-			FaceServiceResult result2local = await svc.ProcessImageAtLocal("images/image2.jpg");
+			//FaceServiceResult result2local = await svc.ProcessImageAtLocal("images/image2.jpg");
 
 			// URL
-			FaceServiceResult result1url = await svc.ProcessImageAtUrl("https://destinonegocio.com/wp-content/uploads/2015/12/ico-destinonegocio-empowerment-istock-getty-images-1030x696.jpg");
+			FaceServiceResult result1url = await svc.ProcessImageAtUrl("https://pzpubliceus.blob.core.windows.net/public/34.jpg");
 
 			// URL
-			FaceServiceResult result2url = await svc.ProcessImageAtUrl("https://i.ytimg.com/vi/R_CYkvXdYXE/maxresdefault.jpg");
+			FaceServiceResult result2url = await svc.ProcessImageAtUrl("https://pzpubliceus.blob.core.windows.net/public/38.jpg");
 		}
 	}
 }

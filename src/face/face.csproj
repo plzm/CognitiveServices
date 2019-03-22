@@ -13,11 +13,12 @@
     <Product>pelazem.azure.cognitive.face</Product>
     <AssemblyName>pelazem.azure.cognitive.face</AssemblyName>
     <RootNamespace>pelazem.azure.cognitive.face</RootNamespace>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="pelazem.util" Version="2.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="pelazem.util" Version="2.4.0" />
   </ItemGroup>
 
 </Project>
