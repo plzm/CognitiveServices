@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace pelazem.azure.cognitive.face
 {
@@ -14,5 +15,14 @@ namespace pelazem.azure.cognitive.face
 		public FaceRectangle FaceRectangle { get; set; }
 
 		public FaceAttributes FaceAttributes { get; set; }
+
+		public string ToJson()
+		{
+			JsonSerializerSettings settings = new JsonSerializerSettings();
+			settings.Formatting = Formatting.Indented;
+			settings.NullValueHandling = NullValueHandling.Include;
+
+			return JsonConvert.SerializeObject(this, settings);
+		}
 	}
 }
