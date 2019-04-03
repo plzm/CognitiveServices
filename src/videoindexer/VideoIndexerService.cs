@@ -90,7 +90,7 @@ namespace pelazem.azure.cognitive.videoindexer
 
 		#region Access Tokens
 
-		public async Task<string> GetVideoIndexerApiAccessTokenForAccount(bool allowEdit = true)
+		public async Task<string> GetVideoIndexerApiAccessTokenForAccountAsync(bool allowEdit = true)
 		{
 			var url = $"{this.VideoIndexerApiUrl}/auth/{this.VideoIndexerApiAzureRegion}/Accounts/{this.VideoIndexerApiAccountId}/AccessToken?allowEdit={(allowEdit ? "true" : "false")}";
 
@@ -101,7 +101,7 @@ namespace pelazem.azure.cognitive.videoindexer
 			return token;
 		}
 
-		public async Task<string> GetVideoIndexerApiAccessTokenForVideo(string videoIndexerVideoId, bool allowEdit = true)
+		public async Task<string> GetVideoIndexerApiAccessTokenForVideoAsync(string videoIndexerVideoId, bool allowEdit = true)
 		{
 			var url = $"{this.VideoIndexerApiUrl}/auth/{this.VideoIndexerApiAzureRegion}/Accounts/{this.VideoIndexerApiAccountId}/Videos/{videoIndexerVideoId}/AccessToken?allowEdit={(allowEdit ? "true" : "false")}";
 
@@ -116,7 +116,7 @@ namespace pelazem.azure.cognitive.videoindexer
 
 		#region Account
 
-		public async Task<List<VideoIndexerAccount>> GetVideoIndexerApiAccounts(bool allowEdit = false)
+		public async Task<List<VideoIndexerAccount>> GetVideoIndexerApiAccountsAsync(bool allowEdit = false)
 		{
 			var url = $"{this.VideoIndexerApiUrl}/auth/{this.VideoIndexerApiAzureRegion}/Accounts?generateAccessTokens=false&allowEdit={(allowEdit ? "true" : "false")}";
 
@@ -131,10 +131,10 @@ namespace pelazem.azure.cognitive.videoindexer
 
 		#endregion
 
-		public async Task<string> UploadVideo(VideoIndexerVideoInput video, string accountAccessToken = "", string callbackUrlOnComplete = "")
+		public async Task<string> UploadVideoAsync(VideoIndexerVideoInput video, string accountAccessToken = "", string callbackUrlOnComplete = "")
 		{
 			if (string.IsNullOrWhiteSpace(accountAccessToken))
-				accountAccessToken = await this.GetVideoIndexerApiAccessTokenForAccount();
+				accountAccessToken = await this.GetVideoIndexerApiAccessTokenForAccountAsync();
 
 			var content = new MultipartFormDataContent();
 			content.Headers.Add("Content-Length", "0"); // Have to set this header to avoid HTTP 411 error from video indexer API (not documented)
@@ -167,11 +167,11 @@ namespace pelazem.azure.cognitive.videoindexer
 			return videoId;
 		}
 
-		public async Task<List<VideoIndexerVideo>> GetVideos(bool withDetailsAndInsights, bool withCaptions)
+		public async Task<List<VideoIndexerVideo>> GetVideosAsync(bool withDetailsAndInsights, bool withCaptions)
 		{
 			List<VideoIndexerVideo> interim = new List<VideoIndexerVideo>();
 
-			string accountAccessToken = await this.GetVideoIndexerApiAccessTokenForAccount();
+			string accountAccessToken = await this.GetVideoIndexerApiAccessTokenForAccountAsync();
 
 			int pageSize = 50;
 			int skip = 0;
@@ -200,23 +200,23 @@ namespace pelazem.azure.cognitive.videoindexer
 				List<VideoIndexerVideo> full = new List<VideoIndexerVideo>();
 
 				foreach (VideoIndexerVideo v in interim)
-					full.Add(await GetVideo(v.Id, withCaptions));
+					full.Add(await GetVideoAsync(v.Id, withCaptions));
 
 				return full;
 			}
 			else
 			{
 				if (withCaptions)
-					await SetVideoCaptions(interim);
+					await SetVideoCaptionsAsync(interim);
 
 				return interim;
 			}
 		}
 
-		public async Task<VideoIndexerVideo> GetVideo(string videoId, bool withCaptions, string accessToken = "")
+		public async Task<VideoIndexerVideo> GetVideoAsync(string videoId, bool withCaptions, string accessToken = "")
 		{
 			if (string.IsNullOrWhiteSpace(accessToken))
-				accessToken = await this.GetVideoIndexerApiAccessTokenForVideo(videoId, false);
+				accessToken = await this.GetVideoIndexerApiAccessTokenForVideoAsync(videoId, false);
 
 			var url = $"{this.VideoIndexerApiUrl}/{this.VideoIndexerApiAzureRegion}/Accounts/{this.VideoIndexerApiAccountId}/Videos/{videoId}/Index?accessToken={accessToken}";
 
@@ -257,22 +257,22 @@ namespace pelazem.azure.cognitive.videoindexer
 				result = null;
 
 				if (withCaptions)
-					final.Captions = await GetVideoCaptions(videoId, accessToken);
+					final.Captions = await GetVideoCaptionsAsync(videoId, accessToken);
 			}
 
 			return final;
 		}
 
-		public async Task SetVideoCaptions(IEnumerable<VideoIndexerVideo> videos)
+		public async Task SetVideoCaptionsAsync(IEnumerable<VideoIndexerVideo> videos)
 		{
 			foreach (VideoIndexerVideo video in videos)
-				video.Captions = await GetVideoCaptions(video.Id);
+				video.Captions = await GetVideoCaptionsAsync(video.Id);
 		}
 
-		public async Task<string> GetVideoCaptions(string videoId, string accessToken = "")
+		public async Task<string> GetVideoCaptionsAsync(string videoId, string accessToken = "")
 		{
 			if (string.IsNullOrWhiteSpace(accessToken))
-				accessToken = await this.GetVideoIndexerApiAccessTokenForVideo(videoId, false);
+				accessToken = await this.GetVideoIndexerApiAccessTokenForVideoAsync(videoId, false);
 
 			var url = $"{this.VideoIndexerApiUrl}/{this.VideoIndexerApiAzureRegion}/Accounts/{this.VideoIndexerApiAccountId}/Videos/{videoId}/Captions?accessToken={accessToken}";
 
@@ -282,11 +282,11 @@ namespace pelazem.azure.cognitive.videoindexer
 			return content;
 		}
 
-		public async Task SetCurrentVideoProcessingStatus(IEnumerable<VideoIndexerVideoInput> videos)
+		public async Task SetCurrentVideoProcessingStatusAsync(IEnumerable<VideoIndexerVideoInput> videos)
 		{
 			foreach (VideoIndexerVideoInput video in videos)
 			{
-				string accessToken = await this.GetVideoIndexerApiAccessTokenForVideo(video.VideoIndexerVideoId, false);
+				string accessToken = await this.GetVideoIndexerApiAccessTokenForVideoAsync(video.VideoIndexerVideoId, false);
 
 				var url = $"{this.VideoIndexerApiUrl}/{this.VideoIndexerApiAzureRegion}/Accounts/{this.VideoIndexerApiAccountId}/Videos/{video.VideoIndexerVideoId}/Index?accessToken={accessToken}";
 

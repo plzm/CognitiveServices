@@ -9,7 +9,7 @@ namespace videoindexer.console
 	class Program
 	{
 		static string videoIndexerApiUrl = "https://api.videoindexer.ai";
-		static string videoIndexerApiAzureRegion = "westus2";
+		static string videoIndexerApiAzureRegion = "eastus2";
 
 		static string videoIndexerApiAccountId = "";
 
@@ -24,8 +24,9 @@ namespace videoindexer.console
 
 			// var accounts = await svc.GetVideoIndexerApiAccounts();
 
-			List<VideoIndexerVideo> videos = await svc.GetVideos(true, true);
+			List<VideoIndexerVideo> videos = await svc.GetVideosAsync(true, true);
 
+			string captions = await svc.GetVideoCaptionsAsync(videos.First().Id);
 
 		}
 	}

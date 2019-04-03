@@ -30,10 +30,10 @@ namespace face.console
 			//FaceServiceResult result2local = await svc.ProcessImageAtLocal("images/image2.jpg");
 
 			// URL
-			// FaceServiceResult result1url = await svc.ProcessImageAtUrl("https://pzpubliceus.blob.core.windows.net/public/34.jpg");
+			FaceServiceResult result1url = await svc.ProcessImageAtUrl("https://pzpubliceus.blob.core.windows.net/public/34.jpg");
 
 			// URL
-			// FaceServiceResult result2url = await svc.ProcessImageAtUrl("https://pzpubliceus.blob.core.windows.net/public/38.jpg");
+			FaceServiceResult result2url = await svc.ProcessImageAtUrl("https://pzpubliceus.blob.core.windows.net/public/38.jpg");
 		}
 	}
 }
