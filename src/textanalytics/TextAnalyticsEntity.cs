@@ -12,6 +12,8 @@ namespace pelazem.azure.cognitive.textanalytics
 
 		public string Type {get; set;}
 
+		public string SubType { get; set; }
+
 		public string WikipediaId { get; set; }
 		public string WikipediaLanguage { get; set; }
 		public string WikipediaUrl { get; set; }

@@ -21,7 +21,7 @@ namespace pelazem.azure.cognitive.textanalytics
 
 		#region Properties
 
-		public string ApiUrlCommonBase { get; set; } = string.Empty;
+		public string ApiUrl { get; set; } = string.Empty;
 		public string ApiKey { get; set; } = string.Empty;
 
 		#endregion
@@ -38,13 +38,13 @@ namespace pelazem.azure.cognitive.textanalytics
 			if (string.IsNullOrWhiteSpace(apiKey))
 				throw new ArgumentException(apiKey);
 
-			this.ApiUrlCommonBase = GetApiUrlCommonBase(apiEndpointUrl);
+			this.ApiUrl = apiEndpointUrl;
 			this.ApiKey = apiKey;
 		}
 
 		#endregion
 
-		public async Task<TextAnalyticsServiceResult> ProcessAsync(string text, string language = "en", bool processSentiment = true, bool processLanguages = false, bool processKeyPhrases = false, bool processEntities = false)
+		public async Task<TextAnalyticsServiceResult> ProcessAsync(string text, string language = "en", bool processSentiment = true, bool processLanguages = true, bool processKeyPhrases = true, bool processEntities = true)
 		{
 			TextAnalyticsServiceResult result = new TextAnalyticsServiceResult();
 
@@ -105,22 +105,22 @@ namespace pelazem.azure.cognitive.textanalytics
 
 		private async Task<TextAnalyticsServiceResult> ProcessEntities(HttpContent content)
 		{
-			return await ProcessWorker(this.ApiUrlCommonBase + "/v2.1-preview/entities", content);
+			return await ProcessWorker(this.ApiUrl + "entities", content);
 		}
 
 		private async Task<TextAnalyticsServiceResult> ProcessKeyPhrases(HttpContent content)
 		{
-			return await ProcessWorker(this.ApiUrlCommonBase + "/v2.0/keyPhrases", content);
+			return await ProcessWorker(this.ApiUrl + "keyPhrases", content);
 		}
 
 		private async Task<TextAnalyticsServiceResult> ProcessLanguages(HttpContent content)
 		{
-			return await ProcessWorker(this.ApiUrlCommonBase + "/v2.0/languages", content);
+			return await ProcessWorker(this.ApiUrl + "languages", content);
 		}
 
 		private async Task<TextAnalyticsServiceResult> ProcessSentiment(HttpContent content)
 		{
-			return await ProcessWorker(this.ApiUrlCommonBase + "/v2.0/sentiment", content);
+			return await ProcessWorker(this.ApiUrl + "sentiment", content);
 		}
 
 		private async Task<TextAnalyticsServiceResult> ProcessWorker(string apiUrl, HttpContent content)
@@ -192,21 +192,6 @@ namespace pelazem.azure.cognitive.textanalytics
 			_httpClients.Add(apiUrl, result);
 
 			return result;
-		}
-
-		private string GetApiUrlCommonBase(string apiEndpointUrl)
-		{
-			string apiUrlCommonBase = apiEndpointUrl.Trim();
-
-			// Remove trailing slash, if present
-			if (apiUrlCommonBase.EndsWith("/"))
-				apiUrlCommonBase = apiUrlCommonBase.Substring(0, apiUrlCommonBase.Length - 1);
-
-			// Remove numeric API version specifier, if present - since we will use multiple versions when combining different API functions
-			if (char.IsDigit(apiUrlCommonBase.Last()))
-				apiUrlCommonBase = apiUrlCommonBase.Substring(0, apiUrlCommonBase.Length - 5);
-
-			return apiUrlCommonBase;
 		}
 	}
 }

@@ -27,39 +27,51 @@ namespace textanalytics.console
 
 		static async Task ProcessTexts()
 		{
-			string msg = GetTripMessage();
+			string msg = "Today is an excellent day! Every day is; you see, rain makes plants grow and sun makes us happy. It's all good, either way.";
 
-			string apiUrl = "";
-			string apiKey = "";
+			string apiUrl = "https://eastus.api.cognitive.microsoft.com/text/analytics/v2.1/";
+			string apiKey = "2b7db267d498432e80061c5c8146b7e7";
 
 			TextAnalyticsServiceClient svc = new TextAnalyticsServiceClient(apiUrl, apiKey);
 
-			JObject jo = JObject.Parse(msg);
-			string text1 = jo["customer_comments"].ToString();
-			Console.WriteLine(text1);
-			Console.WriteLine();
+			TextAnalyticsServiceResult svcResult = svc.ProcessAsync(msg).GetAwaiter().GetResult();
 
-			TextAnalyticsServiceResult result1 = await svc.ProcessAsync(text1);
-
-			if (result1.Responses.Count > 0)
+			if (svcResult.Responses.Count > 0)
 			{
-				TextAnalyticsResponse response = result1.Responses.First();
+				TextAnalyticsResponse response = svcResult.Responses.First();
 
-				jo["textanalytics_customer_sentiment_score"] = response.SentimentScore;
+				Console.WriteLine("Sentiment Score: " + response.SentimentScore.ToString());
+				Console.WriteLine();
 
-				jo["textanalytics_customer_key_phrases"] = new JArray(response.KeyPhrases);
+				Console.WriteLine("Key Phrases: " + response.KeyPhrases.Count.ToString());
 
-				jo["textanalytics_customer_detected_languages"] = (JArray)JToken.FromObject(response.DetectedLanguages);
+				foreach (string keyPhrase in response.KeyPhrases)
+					Console.WriteLine(keyPhrase);
 
-				jo["textanalytics_customer_entities"] = (JArray)JToken.FromObject(response.Entities);
+				Console.WriteLine();
 
-				jo["textanalytics_errors"] = (JArray)JToken.FromObject(result1.Errors);
+				Console.WriteLine("Detected Languages: " + response.DetectedLanguages.Count.ToString());
+
+				foreach (TextAnalyticsLanguage detectedLanguage in response.DetectedLanguages)
+					Console.WriteLine(detectedLanguage.Name);
+
+				Console.WriteLine();
+
+				Console.WriteLine("Entities: " + response.Entities.Count.ToString());
+
+				foreach (TextAnalyticsEntity entity in response.Entities)
+					Console.WriteLine(entity.Name + " | " + entity.Type + " | " + entity.SubType);
+
+				Console.WriteLine();
+
+				Console.WriteLine("Errors: " + svcResult.Errors.Count.ToString());
+
+				foreach (TextAnalyticsError error in svcResult.Errors)
+					Console.WriteLine(error.Message);
+
+				Console.WriteLine();
 			}
 
-			Console.WriteLine(jo.ToString());
-
-			Console.WriteLine();
-			Console.WriteLine();
 
 
 			//Console.WriteLine("George Washington Farewell Address (partial)");
@@ -74,40 +86,47 @@ namespace textanalytics.console
 			//Console.WriteLine();
 		}
 
-		private static string GetTripMessage()
-		{
-			TripMessage message = new TripMessage();
+		//private static string GetTripMessage()
+		//{
+		//	TripMessage message = new TripMessage();
 
-			message.trip_type = 1;
-			message.trip_year = DateTime.Now.Year.ToString();
-			message.trip_month = string.Format("{0:MM}", DateTime.Now);
-			message.taxi_type = "Yellow";
-			message.vendor_id = 1;
-			message.pickup_datetime = DateTime.Now.AddMinutes(-30);
-			message.dropoff_datetime = message.pickup_datetime.AddMinutes(15);
-			message.passenger_count = 2;
-			message.trip_distance = 5;
-			message.rate_code_id = 1;
-			message.store_and_fwd_flag = "";
-			message.pickup_location_id = 66;
-			message.dropoff_location_id = 99;
-			message.pickup_longitude = "77.7777";
-			message.pickup_latitude = "33.3333";
-			message.dropoff_longitude = "77.9999";
-			message.dropoff_latitude = "33.6666";
-			message.payment_type = 2;
-			message.fare_amount = 13;
-			message.extra = 1.5;
-			message.mta_tax = 2.2;
-			message.tip_amount = 3;
-			message.tolls_amount = 1.75;
-			message.improvement_surcharge = 0.6;
-			message.ehail_fee = 0.99;
+		//	message.trip_type = 1;
+		//	message.trip_year = DateTime.Now.Year.ToString();
+		//	message.trip_month = string.Format("{0:MM}", DateTime.Now);
+		//	message.taxi_type = "Yellow";
+		//	message.vendor_id = 1;
+		//	message.pickup_datetime = DateTime.Now.AddMinutes(-30);
+		//	message.dropoff_datetime = message.pickup_datetime.AddMinutes(15);
+		//	message.passenger_count = 2;
+		//	message.trip_distance = 5;
+		//	message.rate_code_id = 1;
+		//	message.store_and_fwd_flag = "";
+		//	message.pickup_location_id = 66;
+		//	message.dropoff_location_id = 99;
+		//	message.pickup_longitude = "77.7777";
+		//	message.pickup_latitude = "33.3333";
+		//	message.dropoff_longitude = "77.9999";
+		//	message.dropoff_latitude = "33.6666";
+		//	message.payment_type = 2;
+		//	message.fare_amount = 13;
+		//	message.extra = 1.5;
+		//	message.mta_tax = 2.2;
+		//	message.tip_amount = 3;
+		//	message.tolls_amount = 1.75;
+		//	message.improvement_surcharge = 0.6;
+		//	message.ehail_fee = 0.99;
 
-			message.customer_comments = "Ride was BAD!! Car was dirty. SUspenson vry hard. Avoid.";
+		//	message.customer_comments = "Ride was BAD!! Car was dirty. SUspenson vry hard. Avoid.";
 
-			return JsonConvert.SerializeObject(message, _jsonSerializerSettings);
-		}
+		//	return JsonConvert.SerializeObject(message, _jsonSerializerSettings);
+		//}
 
+		//jo["textanalytics_customer_key_phrases"] = new JArray(response.KeyPhrases);
+
+		//jo["textanalytics_customer_detected_languages"] = (JArray)JToken.FromObject(response.DetectedLanguages);
+
+		//jo["textanalytics_customer_entities"] = (JArray)JToken.FromObject(response.Entities);
+
+		//jo["textanalytics_errors"] = (JArray)JToken.FromObject(result1.Errors);
 	}
 }
