@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+ 
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.60.6"/>
+    <PackageReference Include="pelazem.azure.storage" Version="3.0.1"/>
+    <PackageReference Include="pelazem.http" Version="1.1.0"/>
+    <PackageReference Include="pelazem.util" Version="3.0.2"/>
+  </ItemGroup>
+</Project>

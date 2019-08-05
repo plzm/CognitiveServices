@@ -1,0 +1,22 @@
+3 Actions | 1,000 Contexts | 50 per Segment | 1000 Pause | Half-scores off
+
+Segment: 1 | Count: 50 | Total Reward: -18 | Count Reward Half: 0 | Count Reward Full: 16
+Segment: 2 | Count: 50 | Total Reward: -8 | Count Reward Half: 0 | Count Reward Full: 21
+Segment: 3 | Count: 50 | Total Reward: 8 | Count Reward Half: 0 | Count Reward Full: 29
+Segment: 4 | Count: 50 | Total Reward: 0 | Count Reward Half: 0 | Count Reward Full: 25
+Segment: 5 | Count: 50 | Total Reward: -12 | Count Reward Half: 0 | Count Reward Full: 19
+Segment: 6 | Count: 50 | Total Reward: 0 | Count Reward Half: 0 | Count Reward Full: 25
+Segment: 7 | Count: 50 | Total Reward: -4 | Count Reward Half: 0 | Count Reward Full: 23
+Segment: 8 | Count: 50 | Total Reward: -24 | Count Reward Half: 0 | Count Reward Full: 13
+Segment: 9 | Count: 50 | Total Reward: -18 | Count Reward Half: 0 | Count Reward Full: 16
+Segment: 10 | Count: 50 | Total Reward: -8 | Count Reward Half: 0 | Count Reward Full: 21
+Segment: 11 | Count: 50 | Total Reward: 2 | Count Reward Half: 0 | Count Reward Full: 26
+Segment: 12 | Count: 50 | Total Reward: -10 | Count Reward Half: 0 | Count Reward Full: 20
+Segment: 13 | Count: 50 | Total Reward: -18 | Count Reward Half: 0 | Count Reward Full: 16
+Segment: 14 | Count: 50 | Total Reward: -18 | Count Reward Half: 0 | Count Reward Full: 16
+Segment: 15 | Count: 50 | Total Reward: -12 | Count Reward Half: 0 | Count Reward Full: 19
+Segment: 16 | Count: 50 | Total Reward: -18 | Count Reward Half: 0 | Count Reward Full: 16
+Segment: 17 | Count: 50 | Total Reward: -2 | Count Reward Half: 0 | Count Reward Full: 24
+Segment: 18 | Count: 50 | Total Reward: -8 | Count Reward Half: 0 | Count Reward Full: 21
+Segment: 19 | Count: 50 | Total Reward: -12 | Count Reward Half: 0 | Count Reward Full: 19
+Segment: 20 | Count: 50 | Total Reward: 2 | Count Reward Half: 0 | Count Reward Full: 26
