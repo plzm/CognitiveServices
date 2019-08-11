@@ -30,9 +30,9 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
     // Reference: https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.eventgrid.models.eventgridevent?view=azure-dotnet
 
     // The event grid event subject is useful to know if a "subject starts with" filter will be applied to the event grid subscription
-    log.LogInformation($"{nameof(eventGridEvent.Subject)} = {eventGridEvent.Subject}");
+    // log.LogInformation($"{nameof(eventGridEvent.Subject)} = {eventGridEvent.Subject}");
     // Event grid event data
-    log.LogInformation(eventGridEvent.Data.ToString());
+    // log.LogInformation(eventGridEvent.Data.ToString());
 
     // //////////////////////////////////////////////////
     // Get info from app config
@@ -42,14 +42,14 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
     string sqlConnectionString = Environment.GetEnvironmentVariable("SqlConnectionString");
     string cogSvcEndpointCompVis = Environment.GetEnvironmentVariable("CogSvcEndpointCompVis");
     string cogSvcApiKeyCompVis = Environment.GetEnvironmentVariable("CogSvcApiKeyCompVis");
-    // string cogSvcEndpointFormRec = Environment.GetEnvironmentVariable("CogSvcEndpointFormRec");
-    // string cogSvcApiKeyFormRec = Environment.GetEnvironmentVariable("CogSvcApiKeyFormRec");
+    string cogSvcEndpointFormRec = Environment.GetEnvironmentVariable("CogSvcEndpointFormRec");
+    string cogSvcApiKeyFormRec = Environment.GetEnvironmentVariable("CogSvcApiKeyFormRec");
 
     if (!(cogSvcEndpointCompVis.EndsWith("/")))
         cogSvcEndpointCompVis += "/";
 
-    // if (!(cogSvcEndpointFormRec.EndsWith("/")))
-    //     cogSvcEndpointFormRec += "/";
+    if (!(cogSvcEndpointFormRec.EndsWith("/")))
+        cogSvcEndpointFormRec += "/";
 
     // log.LogInformation($"{nameof(sharedAccessPolicyName)} = {sharedAccessPolicyName}");
     // log.LogInformation($"{nameof(storageAccountName)} = {storageAccountName}");
@@ -104,25 +104,89 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
 
     string contentType = "application/json";
 
+
     // Computer vision
-    string urlCompVis = cogSvcEndpointCompVis + "vision/v2.0/analyze?language=en&visualFeatures=Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags";
+    // string urlCompVis = cogSvcEndpointCompVis + "vision/v2.0/analyze?language=en&visualFeatures=Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags";
 
-    log.LogInformation($"{nameof(urlCompVis)} = {urlCompVis}");
+    // log.LogInformation($"{nameof(urlCompVis)} = {urlCompVis}");
 
-    HttpUtil httpUtilCompVis = new HttpUtil();
-    httpUtilCompVis.AddRequestHeader("Ocp-Apim-Subscription-Key", cogSvcApiKeyCompVis);
+    // HttpUtil httpUtilCompVis = new HttpUtil();
+    // httpUtilCompVis.AddRequestHeader("Ocp-Apim-Subscription-Key", cogSvcApiKeyCompVis);
 
-    string bodyCompVis = $"{{\"url\":\"{blobSapUrl}\"}}";
+    // string bodyCompVis = $"{{\"url\":\"{blobSapUrl}\"}}";
 
-    // log.LogInformation($"{nameof(bodyCompVis)} = {bodyCompVis}");
+    // // log.LogInformation($"{nameof(bodyCompVis)} = {bodyCompVis}");
 
-    HttpContent contentCompVis = httpUtilCompVis.GetHttpContent(bodyCompVis, contentType);
+    // HttpContent contentCompVis = httpUtilCompVis.GetHttpContent(bodyCompVis, contentType);
 
-    OpResult resultCompVis = await httpUtilCompVis.PostAsync(urlCompVis, contentCompVis);
+    // OpResult resultCompVis = await httpUtilCompVis.PostAsync(urlCompVis, contentCompVis);
 
-    log.LogInformation(resultCompVis.Succeeded.ToString());
-    log.LogInformation(resultCompVis.Message);
+    // log.LogInformation(resultCompVis.Succeeded.ToString());
+    // log.LogInformation(resultCompVis.Message);
     // log.LogInformation(resultCompVis.Output?.ToString());
+
+
+    // Form Recognizer
+    string urlFormRecAnalyze = cogSvcEndpointFormRec + "asyncBatchAnalyze/";
+    string urlFormRecRetrieve = cogSvcEndpointFormRec + "operations/";
+
+    HttpUtil httpUtilFormRec = new HttpUtil();
+    httpUtilFormRec.AddRequestHeader("Ocp-Apim-Subscription-Key", cogSvcApiKeyFormRec);
+
+    string bodyFormRec = $"{{\"url\":\"{blobSapUrl}\"}}";
+
+    HttpContent contentFormRec = httpUtilFormRec.GetHttpContent(bodyFormRec, contentType);
+
+    OpResult resultFormRec = await httpUtilFormRec.PostAsync(urlFormRecAnalyze, contentFormRec);
+
+    log.LogInformation(resultFormRec.Succeeded.ToString());
+    log.LogInformation(resultFormRec.Message);
+
+    HttpResponseMessage responseFormRec = resultFormRec.Output as HttpResponseMessage;
+
+    log.LogInformation(await httpUtilFormRec.GetHttpResponseContentAsync(responseFormRec));
+
+    log.LogInformation("Response Headers");
+
+    foreach (var header in responseFormRec.Headers)
+    {
+        log.LogInformation($"Header.Key={header.Key}");
+
+        IEnumerable<string> headerValue = header.Value;
+
+        if (headerValue != null)
+        {
+            foreach (string entry in headerValue)
+                log.LogInformation(entry);
+
+            log.LogInformation("");
+        }
+    }
+
+    log.LogInformation("");
+    log.LogInformation("Response Content Headers");
+
+    foreach (var header in responseFormRec.Content.Headers)
+    {
+        log.LogInformation($"Header.Key={header.Key}");
+
+        IEnumerable<string> headerValue = header.Value;
+
+        if (headerValue != null)
+        {
+            foreach (string entry in headerValue)
+                log.LogInformation(entry);
+
+            log.LogInformation("");
+        }
+    }
+
+    // while (true)
+    // {
+    //     Thread.Sleep(1000);
+
+
+    // }
     // //////////////////////////////////////////////////
 
 
@@ -130,16 +194,16 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
     // Save results to database
 
     // Prepare SQL query params
-    var procParams = new DynamicParameters();
-    procParams.Add("@ReceiptGuid", null, dbType: DbType.Guid, direction: ParameterDirection.Input, size: 32);
-    procParams.Add("@ImageUrl", blobSapUrl, dbType: DbType.String, direction: ParameterDirection.Input, size: 1000);
-    procParams.Add("@JsonCustomVision", resultCompVis.Output?.ToString(), dbType: DbType.String, direction: ParameterDirection.Input, size: -1);
-    procParams.Add("@JsonFormsRecognizer", string.Empty, dbType: DbType.String, direction: ParameterDirection.Input, size: -1);
+    // var procParams = new DynamicParameters();
+    // procParams.Add("@ReceiptGuid", null, dbType: DbType.Guid, direction: ParameterDirection.Input, size: 32);
+    // procParams.Add("@ImageUrl", blobSapUrl, dbType: DbType.String, direction: ParameterDirection.Input, size: 1000);
+    // procParams.Add("@JsonCustomVision", resultCompVis.Output?.ToString(), dbType: DbType.String, direction: ParameterDirection.Input, size: -1);
+    // procParams.Add("@JsonFormsRecognizer", string.Empty, dbType: DbType.String, direction: ParameterDirection.Input, size: -1);
 
-    // Exec SQL query
-    using (IDbConnection db = new SqlConnection(sqlConnectionString))
-    {
-        var result = await db.ExecuteAsync("data.SaveReceipt", procParams, commandType: CommandType.StoredProcedure);
-    }
+    // // Exec SQL query
+    // using (IDbConnection db = new SqlConnection(sqlConnectionString))
+    // {
+    //     var result = await db.ExecuteAsync("data.SaveReceipt", procParams, commandType: CommandType.StoredProcedure);
+    // }
     // //////////////////////////////////////////////////
 }
