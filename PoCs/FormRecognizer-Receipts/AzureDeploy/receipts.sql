@@ -4,7 +4,7 @@ GO
 CREATE ROLE [ReceiptsRole];
 GO
 
-CREATE USER ReceiptsUser1 WITH PASSWORD = N'P@ssw0rd2019!', DEFAULT_SCHEMA=[data];
+CREATE USER ReceiptsUser1 WITH PASSWORD = N'P@ssw0rd2019-', DEFAULT_SCHEMA=[data];
 GO
 ALTER ROLE [ReceiptsRole] ADD MEMBER [ReceiptsUser1];
 GO
@@ -19,8 +19,7 @@ CREATE TABLE data.Receipts
 (
 	ReceiptGuid [uniqueidentifier] not null,
 	ImageUrl [nvarchar](1000) null,
-	JsonCustomVision [nvarchar](max) null,
-	JsonFormsRecognizer [nvarchar](max) null,
+	JsonFormRecognizer [nvarchar](max) null,
 	DateCreated [datetime2] null,
 	DateUpdated [datetime2] null
 );
@@ -34,19 +33,11 @@ GO
 CREATE PROC data.SaveReceipt
 	@ReceiptGuid uniqueidentifier = null,
 	@ImageUrl nvarchar(1000) = null,
-	@JsonCustomVision nvarchar(max) = null,
-	@JsonFormsRecognizer nvarchar(max) = null
+	@JsonFormRecognizer nvarchar(max) = null
 AS
 BEGIN
 
-	-- IF	@JsonCustomVision IS NOT null
-	-- BEGIN
-	-- 	SELECT
-	-- 		@value1 = JSON_VALUE(@JsonCustomVision, '$.something.value1')
-	-- 	;
-	-- END
-
-	-- IF	@JsonFormsRecognizer IS NOT null
+	-- IF	@JsonFormRecognizer IS NOT null
 	-- BEGIN
 	-- 	SELECT
 	-- 		@value2 = JSON_VALUE(@JsonCustomVision, '$.something.value2')
@@ -59,24 +50,44 @@ BEGIN
 				INSERT INTO	data.Receipts
 				(
 					ImageUrl,
-					JsonCustomVision,
-					JsonFormsRecognizer
+					JsonFormRecognizer
 				)
 				VALUES
 				(
 					@ImageUrl,
-					@JsonCustomVision,
-					@JsonFormsRecognizer
+					@JsonFormRecognizer
 				);
 		END
 	ELSE
 		BEGIN
 			UPDATE	data.Receipts
 			SET		ImageUrl = @ImageUrl,
-					JsonCustomVision = @JsonCustomVision,
-					JsonFormsRecognizer = @JsonFormsRecognizer,
+					JsonFormRecognizer = @JsonFormRecognizer,
 					DateUpdated = getutcdate()
 			WHERE	ReceiptGuid = @ReceiptGuid;
 		END
+END
+GO
+
+CREATE PROC data.GetReceipts
+AS
+BEGIN
+	SELECT
+		ReceiptGuid,
+		Subtotal = ISNULL(JSON_VALUE(JsonFormRecognizer, '$.understandingResults[0].fields.Subtotal.value'), 0),
+		Tax = ISNULL(JSON_VALUE(JsonFormRecognizer, '$.understandingResults[0].fields.Tax.value'), 0),
+		Total = ISNULL(JSON_VALUE(JsonFormRecognizer, '$.understandingResults[0].fields.Total.value'), 0),
+        MerchantName = JSON_VALUE(JsonFormRecognizer, '$.understandingResults[0].fields.MerchantName.value'),
+        MerchantAddress = JSON_VALUE(JsonFormRecognizer, '$.understandingResults[0].fields.MerchantAddress.value'),
+        MerchantPhoneNumber = JSON_VALUE(JsonFormRecognizer, '$.understandingResults[0].fields.MerchantPhoneNumber.value'),
+        TransactionDate = JSON_VALUE(JsonFormRecognizer, '$.understandingResults[0].fields.TransactionDate.value'),
+        TransactionTime = JSON_VALUE(JsonFormRecognizer, '$.understandingResults[0].fields.TransactionTime.value'),
+		ImageUrl,
+		JsonFormRecognizer,
+		DateCreated,
+		DateUpdated
+	FROM
+		data.Receipts
+	;
 END
 GO

@@ -1,10 +1,17 @@
 {
-  "bindings": [
-    {
-      "type": "eventGridTrigger",
-      "name": "eventGridEvent",
-      "direction": "in"
-    }
-  ],
-  "disabled": false
-}
+	"bindings": [
+	  {
+		"type": "eventGridTrigger",
+		"name": "eventGridEvent",
+		"direction": "in"
+	  },
+	  {
+		"type": "queue",
+		"name": "$return",
+		"queueName": "receipts-processing",
+		"connection": "AzureWebJobsDashboard",
+		"direction": "out"
+	  }
+	],
+	"disabled": false
+  }

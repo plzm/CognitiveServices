@@ -102,7 +102,7 @@
 				"zoneRedundant": "[parameters('db_zone_redundant')]"
 			},
 			"tags": {
-				"Purpose": "ADF PoC"
+				"Purpose": "PoC"
 			},
 			"resources": [
 				{

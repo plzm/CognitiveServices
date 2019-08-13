@@ -3,14 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Dynamic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.EventGrid;
@@ -18,35 +11,21 @@ using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Auth;
 using Microsoft.Azure.Storage.Blob;
-using Dapper;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using pelazem.azure.storage;
 using pelazem.http;
 using pelazem.util;
 
-public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
+public static async Task<string> Run(EventGridEvent eventGridEvent, ILogger log)
 {
-    // Reference: https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.eventgrid.models.eventgridevent?view=azure-dotnet
-
-    // The event grid event subject is useful to know if a "subject starts with" filter will be applied to the event grid subscription
-    // log.LogInformation($"{nameof(eventGridEvent.Subject)} = {eventGridEvent.Subject}");
-    // Event grid event data
-    // log.LogInformation(eventGridEvent.Data.ToString());
-
     // //////////////////////////////////////////////////
     // Get info from app config
     string sharedAccessPolicyName = Environment.GetEnvironmentVariable("StorageSharedAccessPolicyName");
     string storageAccountName = Environment.GetEnvironmentVariable("StorageAccountName");
     string storageAccountKey = Environment.GetEnvironmentVariable("StorageAccountKey");
-    string sqlConnectionString = Environment.GetEnvironmentVariable("SqlConnectionString");
-    string cogSvcEndpointCompVis = Environment.GetEnvironmentVariable("CogSvcEndpointCompVis");
-    string cogSvcApiKeyCompVis = Environment.GetEnvironmentVariable("CogSvcApiKeyCompVis");
     string cogSvcEndpointFormRec = Environment.GetEnvironmentVariable("CogSvcEndpointFormRec");
     string cogSvcApiKeyFormRec = Environment.GetEnvironmentVariable("CogSvcApiKeyFormRec");
-
-    if (!(cogSvcEndpointCompVis.EndsWith("/")))
-        cogSvcEndpointCompVis += "/";
 
     if (!(cogSvcEndpointFormRec.EndsWith("/")))
         cogSvcEndpointFormRec += "/";
@@ -54,16 +33,18 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
     // log.LogInformation($"{nameof(sharedAccessPolicyName)} = {sharedAccessPolicyName}");
     // log.LogInformation($"{nameof(storageAccountName)} = {storageAccountName}");
     // log.LogInformation($"{nameof(storageAccountKey)} = {storageAccountKey}");
-    // log.LogInformation($"{nameof(sqlConnectionString)} = {sqlConnectionString}");
-    // log.LogInformation($"{nameof(cogSvcEndpointCompVis)} = {cogSvcEndpointCompVis}");
-    // log.LogInformation($"{nameof(cogSvcApiKeyCompVis)} = {cogSvcApiKeyCompVis}");
     // log.LogInformation($"{nameof(cogSvcEndpointFormRec)} = {cogSvcEndpointFormRec}");
     // log.LogInformation($"{nameof(cogSvcApiKeyFormRec)} = {cogSvcApiKeyFormRec}");
-
-
     // //////////////////////////////////////////////////
 
     // //////////////////////////////////////////////////
+    // Reference: https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.eventgrid.models.eventgridevent?view=azure-dotnet
+
+    // The event grid event subject is useful to know if a "subject starts with" filter will be applied to the event grid subscription
+    // log.LogInformation($"{nameof(eventGridEvent.Subject)} = {eventGridEvent.Subject}");
+    // Event grid event data
+    // log.LogInformation(eventGridEvent.Data.ToString());
+
     // The event data payload is JSON. Let's deserialize it and get our blob API and blob URL.
     string payload = eventGridEvent.Data.ToString();
     JObject jpayload = JObject.Parse(payload);
@@ -72,15 +53,15 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
     string blobUrl = jpayload["url"].ToString();
     int contentLength = pelazem.util.Converter.GetInt32(jpayload["contentLength"]);
 
-    // log.LogInformation($"{nameof(api)} = {api}");
-    // log.LogInformation($"{nameof(blobUrl)} = {blobUrl}");
-    // log.LogInformation($"{nameof(contentLength)} = {contentLength}");
+    log.LogInformation($"{nameof(api)} = {api}");
+    log.LogInformation($"{nameof(blobUrl)} = {blobUrl}");
+    log.LogInformation($"{nameof(contentLength)} = {contentLength}");
 
     // We only want to operate on PutBlob events, not DeleteBlob; and content length > 0
     if (api != "PutBlob" || contentLength <= 0)
     {
         log.LogInformation("Exiting - this Function only applies on PutBlob API events, and for blobs of content length > 0.");
-        return;
+        return "";
     }
     // //////////////////////////////////////////////////
 
@@ -98,37 +79,13 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
     // log.LogInformation($"{nameof(blobSapUrl)} = {blobSapUrl}");
     // //////////////////////////////////////////////////
 
-
     // //////////////////////////////////////////////////
     // Invoke cognitive services
 
     string contentType = "application/json";
 
-
-    // Computer vision
-    // string urlCompVis = cogSvcEndpointCompVis + "vision/v2.0/analyze?language=en&visualFeatures=Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags";
-
-    // log.LogInformation($"{nameof(urlCompVis)} = {urlCompVis}");
-
-    // HttpUtil httpUtilCompVis = new HttpUtil();
-    // httpUtilCompVis.AddRequestHeader("Ocp-Apim-Subscription-Key", cogSvcApiKeyCompVis);
-
-    // string bodyCompVis = $"{{\"url\":\"{blobSapUrl}\"}}";
-
-    // // log.LogInformation($"{nameof(bodyCompVis)} = {bodyCompVis}");
-
-    // HttpContent contentCompVis = httpUtilCompVis.GetHttpContent(bodyCompVis, contentType);
-
-    // OpResult resultCompVis = await httpUtilCompVis.PostAsync(urlCompVis, contentCompVis);
-
-    // log.LogInformation(resultCompVis.Succeeded.ToString());
-    // log.LogInformation(resultCompVis.Message);
-    // log.LogInformation(resultCompVis.Output?.ToString());
-
-
     // Form Recognizer
     string urlFormRecAnalyze = cogSvcEndpointFormRec + "asyncBatchAnalyze/";
-    string urlFormRecRetrieve = cogSvcEndpointFormRec + "operations/";
 
     HttpUtil httpUtilFormRec = new HttpUtil();
     httpUtilFormRec.AddRequestHeader("Ocp-Apim-Subscription-Key", cogSvcApiKeyFormRec);
@@ -139,71 +96,22 @@ public static async Task Run(EventGridEvent eventGridEvent, ILogger log)
 
     OpResult resultFormRec = await httpUtilFormRec.PostAsync(urlFormRecAnalyze, contentFormRec);
 
-    log.LogInformation(resultFormRec.Succeeded.ToString());
-    log.LogInformation(resultFormRec.Message);
+    // log.LogInformation(resultFormRec.Succeeded.ToString());
+    // log.LogInformation(resultFormRec.Message);
 
     HttpResponseMessage responseFormRec = resultFormRec.Output as HttpResponseMessage;
 
-    log.LogInformation(await httpUtilFormRec.GetHttpResponseContentAsync(responseFormRec));
+    string operationLocation = responseFormRec?.Headers?.GetValues("Operation-Location")?.First();
+    log.LogInformation($"{nameof(operationLocation)} = {operationLocation}");
 
-    log.LogInformation("Response Headers");
-
-    foreach (var header in responseFormRec.Headers)
+    var queueMessage = new
     {
-        log.LogInformation($"Header.Key={header.Key}");
+        imageUrl = blobSapUrl,
+        operationLocation = operationLocation,
+        created = string.Format("{0:O}", DateTime.UtcNow),
+        checkCount = 0
+    };
 
-        IEnumerable<string> headerValue = header.Value;
-
-        if (headerValue != null)
-        {
-            foreach (string entry in headerValue)
-                log.LogInformation(entry);
-
-            log.LogInformation("");
-        }
-    }
-
-    log.LogInformation("");
-    log.LogInformation("Response Content Headers");
-
-    foreach (var header in responseFormRec.Content.Headers)
-    {
-        log.LogInformation($"Header.Key={header.Key}");
-
-        IEnumerable<string> headerValue = header.Value;
-
-        if (headerValue != null)
-        {
-            foreach (string entry in headerValue)
-                log.LogInformation(entry);
-
-            log.LogInformation("");
-        }
-    }
-
-    // while (true)
-    // {
-    //     Thread.Sleep(1000);
-
-
-    // }
-    // //////////////////////////////////////////////////
-
-
-    // //////////////////////////////////////////////////
-    // Save results to database
-
-    // Prepare SQL query params
-    // var procParams = new DynamicParameters();
-    // procParams.Add("@ReceiptGuid", null, dbType: DbType.Guid, direction: ParameterDirection.Input, size: 32);
-    // procParams.Add("@ImageUrl", blobSapUrl, dbType: DbType.String, direction: ParameterDirection.Input, size: 1000);
-    // procParams.Add("@JsonCustomVision", resultCompVis.Output?.ToString(), dbType: DbType.String, direction: ParameterDirection.Input, size: -1);
-    // procParams.Add("@JsonFormsRecognizer", string.Empty, dbType: DbType.String, direction: ParameterDirection.Input, size: -1);
-
-    // // Exec SQL query
-    // using (IDbConnection db = new SqlConnection(sqlConnectionString))
-    // {
-    //     var result = await db.ExecuteAsync("data.SaveReceipt", procParams, commandType: CommandType.StoredProcedure);
-    // }
-    // //////////////////////////////////////////////////
+	// Write our queue message to, well, the output queue. Since this Function is async, we have to return, not use an output variable.
+    return JsonConvert.SerializeObject(queueMessage);
 }

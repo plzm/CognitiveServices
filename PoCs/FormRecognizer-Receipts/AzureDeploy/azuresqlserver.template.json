@@ -188,22 +188,6 @@
 					"dependsOn": [
 						"[variables('server_resource_id')]"
 					]
-				},
-				{
-					"name": "[concat(parameters('server_name'), '-vuln-assmt')]",
-					"type": "vulnerabilityAssessments",
-					"apiVersion": "[variables('api_version_vuln_assmt')]",
-					"properties": {
-						"storageContainerPath": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('audit_storage_account_name')), variables('api_version_storage')).primaryEndpoints.blob, parameters('server_name'), '-vuln-assmt')]",
-						"storageAccountAccessKey": "[parameters('audit_storage_account_key')]",
-						"recurringScans": {
-							"isEnabled": true,
-							"emailSubscriptionAdmins": true
-						}
-					},
-					"dependsOn": [
-						"[variables('server_resource_id')]"
-					]
 				}
 			]
 		}

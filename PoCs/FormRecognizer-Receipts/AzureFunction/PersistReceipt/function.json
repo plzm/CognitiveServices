@@ -1,0 +1,12 @@
+{
+	"bindings": [
+	  {
+		"name": "queueMessage",
+		"type": "queueTrigger",
+		"direction": "in",
+		"queueName": "receipts-processing",
+		"connection": "AzureWebJobsDashboard"
+	  }
+	],
+	"disabled": false
+  }

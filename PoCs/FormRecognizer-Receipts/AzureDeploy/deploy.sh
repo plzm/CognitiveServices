@@ -48,7 +48,7 @@ event_grid_subscription_name="$prefix""-blob-receipts-in"
 
 # Azure SQL
 azure_sql_server_admin_sql_username="$prefix""-sqladmin"
-azure_sql_server_admin_sql_password="gXcRb2019^!@iLL"
+azure_sql_server_admin_sql_password="gXcRb2019^#@iLL"
 
 azure_template_path_sql_server="azuresqlserver.template.json"
 azure_sql_server_name="$prefix""-sql-""$azure_region"
@@ -65,8 +65,10 @@ azure_sql_db_bacpac_storage_uri="https://""$storage_acct_name"".blob.core.window
 
 azure_sql_security_role_name="ReceiptsRole"  # This MUST match what's in the bacpac/database! Do not change this until/unless you know exactly what you're doing and have changed it in those other places!!!
 
+# SQL user and password must match what is in receipts.sql or bacpac and is actually deployed
+azure_sql_conn_string="Server=tcp:""$azure_sql_server_name"".database.windows.net,1433;Initial Catalog=""$azure_sql_db_name"";Persist Security Info=False;User ID=ReceiptsUser1;Password=P@ssw0rd2019-;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
+
 # Cognitive Services
-cogsvc_computer_vision_name="$prefix""-cs-compvis"
 cogsvc_form_recognizer_name="$prefix""-cs-formrecognizer"
 
 # ##################################################
@@ -137,42 +139,55 @@ az role assignment create --scope "$functionapp_msi_scope_storage" --assignee-ob
 
 
 # Create Event Grid subscription for storage events
+# This is not working yet, need to figure out what else to do - this fails cannot validate Fn app endpoint
 # az eventgrid event-subscription create --name $event_grid_subscription_name \
 # 	--source-resource-id "/subscriptions/""$azure_subscription_id""/resourceGroups/""$azure_resource_group_name""/providers/Microsoft.Storage/storageaccounts/""$azure_storage_acct_name" \
 # 	--subject-begins-with "/blobServices/default/containers/""$azure_container_name_receipts_in""/blobs/" \
 # 	--endpoint "https://""$functionapp_name"".azurewebsites.net/runtime/webhooks/EventGrid"
 
+
+
 # echo "Upload bacpac file to import into Azure SQL database"
 # az storage blob upload --account-name "$azure_storage_acct_name" --account-key "$azure_storage_acct_key" -c "$storage_container_assets" -n "$azure_sql_db_bacpac_file" -f "$azure_sql_db_bacpac_path"
 
-# echo "Create Azure SQL virtual server"
-# az group deployment create -g "$azure_resource_group_name" -n "$azure_sql_server_name" --template-file "$azure_template_path_sql_server" --parameters \
-# 	location="$azure_region" server_name="$azure_sql_server_name" server_admin_username="$azure_sql_server_admin_sql_username" server_admin_password="$azure_sql_server_admin_sql_password" \
-# 	alerts_email_address="$azure_alerts_email_address" audit_storage_account_name="$azure_storage_acct_name" audit_storage_account_key="$azure_storage_acct_key" \
-# 	firewall_rule_start_ip="$azure_external_ips_allowed" firewall_rule_end_ip="$azure_external_ips_allowed"
+echo "Create Azure SQL virtual server"
+az group deployment create -g "$azure_resource_group_name" -n "$azure_sql_server_name" --template-file "$azure_template_path_sql_server" --parameters \
+	location="$azure_region" server_name="$azure_sql_server_name" server_admin_username="$azure_sql_server_admin_sql_username" server_admin_password="$azure_sql_server_admin_sql_password" \
+	alerts_email_address="$azure_alerts_email_address" audit_storage_account_name="$azure_storage_acct_name" audit_storage_account_key="$azure_storage_acct_key" \
+	firewall_rule_start_ip="$azure_external_ips_allowed" firewall_rule_end_ip="$azure_external_ips_allowed"
 
-# echo "Deploy database (read scale-out and zone redundancy only available for Azure SQL DB Premium)"
-# az group deployment create -g "$azure_resource_group_name" -n "$azure_sql_db_name" --template-file "$azure_template_path_sql_database" --parameters \
-# 	location="$azure_region" server_name="$azure_sql_server_name" db_name="$azure_sql_db_name" \
-# 	db_sku="$azure_sql_db_sku" db_tier="$azure_sql_db_tier" db_max_size_bytes="$azure_sql_db_max_size_bytes" \
-# 	db_read_scale="Disabled" db_zone_redundant=false audit_storage_account_name="$azure_storage_acct_name" audit_storage_account_key="$azure_storage_acct_key"
+echo "Deploy database (read scale-out and zone redundancy only available for Azure SQL DB Premium)"
+az group deployment create -g "$azure_resource_group_name" -n "$azure_sql_db_name" --template-file "$azure_template_path_sql_database" --parameters \
+	location="$azure_region" server_name="$azure_sql_server_name" db_name="$azure_sql_db_name" \
+	db_sku="$azure_sql_db_sku" db_tier="$azure_sql_db_tier" db_max_size_bytes="$azure_sql_db_max_size_bytes" \
+	db_read_scale="Disabled" db_zone_redundant=false audit_storage_account_name="$azure_storage_acct_name" audit_storage_account_key="$azure_storage_acct_key"
 
-# echo "Restore bacpac to Azure SQL ref database"
-# az sql db import -g "$azure_resource_group_name" -s "$azure_sql_server_name" -n "$azure_sql_db_name" \
-#     -u "$azure_sql_server_admin_sql_username" -p "$azure_sql_server_admin_sql_password" \
-#     --storage-uri "$azure_sql_db_bacpac_storage_uri" --storage-key "$azure_storage_acct_key" --storage-key-type "StorageAccessKey"
+echo "Restore bacpac to Azure SQL ref database"
+az sql db import -g "$azure_resource_group_name" -s "$azure_sql_server_name" -n "$azure_sql_db_name" \
+    -u "$azure_sql_server_admin_sql_username" -p "$azure_sql_server_admin_sql_password" \
+    --storage-uri "$azure_sql_db_bacpac_storage_uri" --storage-key "$azure_storage_acct_key" --storage-key-type "StorageAccessKey"
+
 
 echo "Deploy cognitive services"
-# az cognitiveservices account create -l $azure_region -g $azure_resource_group_name -n $cogsvc_computer_vision_name --kind "ComputerVision" --sku "S1" --yes --verbose
-az cognitiveservices account create -l "westus2" -g $azure_resource_group_name -n $cogsvc_form_recognizer_name --kind "FormRecognizer" --sku "S1" --yes --verbose
+az cognitiveservices account create -l "westus2" -g $azure_resource_group_name -n $cogsvc_form_recognizer_name --kind "FormRecognizer" --sku "S0" --yes --verbose
 
-echo "Show cognitive services"
-# az cognitiveservices account show -g $azure_resource_group_name -n $cogsvc_computer_vision_name
-az cognitiveservices account show -g $azure_resource_group_name -n $cogsvc_form_recognizer_name
+# echo "Show cognitive services"
+# az cognitiveservices account show -g $azure_resource_group_name -n $cogsvc_form_recognizer_name
 
-echo "List cognitive services keys"
-# az cognitiveservices account keys list -g $azure_resource_group_name -n $cogsvc_computer_vision_name
-az cognitiveservices account keys list -g $azure_resource_group_name -n $cogsvc_form_recognizer_name
+echo "Get form recognizer cognitive service endpoint and key"
+cogsvc_form_recognizer_endpoint="$(az cognitiveservices account show -g $azure_resource_group_name -n $cogsvc_form_recognizer_name -o tsv --query "endpoint")""formrecognizer/v1.0-preview/prebuilt/receipt/"
+cogsvc_form_recognizer_key="$(az cognitiveservices account keys list -g "$azure_resource_group_name" -n "$cogsvc_form_recognizer_name" -o tsv --query "key1")"
+
+
+# Set Function App settings
+az functionapp config appsettings set -g $azure_resource_group_name -n $functionapp_name --settings "StorageSharedAccessPolicyName=$azure_storage_access_policy_name"
+az functionapp config appsettings set -g $azure_resource_group_name -n $functionapp_name --settings "StorageAccountName=$azure_storage_acct_name"
+az functionapp config appsettings set -g $azure_resource_group_name -n $functionapp_name --settings "StorageAccountKey=$azure_storage_acct_key"
+az functionapp config appsettings set -g $azure_resource_group_name -n $functionapp_name --settings "StorageQueueName=$azure_storage_queue_name"
+az functionapp config appsettings set -g $azure_resource_group_name -n $functionapp_name --settings "SqlConnectionString=$azure_sql_conn_string"
+az functionapp config appsettings set -g $azure_resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRec=$cogsvc_form_recognizer_endpoint"
+az functionapp config appsettings set -g $azure_resource_group_name -n $functionapp_name --settings "CogSvcApiKeyFormRec=$cogsvc_form_recognizer_key"
+
 
 
 # Azure Function Code
