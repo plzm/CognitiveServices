@@ -31,7 +31,7 @@ ImageUrl is the secured URL to the image, stored in Azure blob storage. The stor
 
 JsonFormRecognizer is the complete JSON output from the Form Recognizer Azure AI Cognitive Service. It can be made more easily readable in a good JSON editor like Visual Studio Code with a JSON extension, or in other text editors with appropriate JSON capabilities. Alternately, to avoid tool extension downloads/installs, the JSON can be pasted into an online JSON renderer like that at https://jsonformatter.curiousconcept.com/.
 
-The fields from Subtotal through TransactionTime are all extracted from JsonFormRecognizer via SQL JSON_VALUE() calls, and surfaced as standalone fields for greater readability. See ![receipts.sql](receipts.sql) for details.
+The fields from Subtotal through TransactionTime are all extracted from JsonFormRecognizer via SQL JSON_VALUE() calls, and surfaced as standalone fields for greater readability. See ![receipts.sql](AzureDeploy/receipts.sql) for details.
 
 Resources:
 * [Form Recognizer Azure AI Cognitive Service Overview](https://docs.microsoft.com/azure/cognitive-services/form-recognizer/overview)
