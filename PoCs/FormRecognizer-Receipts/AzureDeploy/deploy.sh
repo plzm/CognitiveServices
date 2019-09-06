@@ -9,7 +9,7 @@
 # Azure
 azure_subscription_id="$(az account show -o tsv --query "id")"
 azure_region="eastus"
-azure_external_ips_allowed="75.68.47.183"
+azure_external_ips_allowed=""
 
 # General
 prefix="aaa"   # This is just a naming prefix used to create other variable values, like resource group names and such
@@ -48,7 +48,7 @@ event_grid_subscription_name="$prefix""-blob-receipts-in"
 
 # Azure SQL
 azure_sql_server_admin_sql_username="$prefix""-sqladmin"
-azure_sql_server_admin_sql_password="gXcRb2019^#@iLL"
+azure_sql_server_admin_sql_password=""
 
 azure_template_path_sql_server="azuresqlserver.template.json"
 azure_sql_server_name="$prefix""-sql-""$azure_region"
