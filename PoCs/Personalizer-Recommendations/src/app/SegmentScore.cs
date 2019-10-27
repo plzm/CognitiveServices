@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace app
+namespace PersonalizerPoC
 {
-	public class Approach2SegmentScore
+	public class SegmentScore
 	{
 		public int Segment { get; set; } = 0;
 		public int Count { get; set; } = 0;

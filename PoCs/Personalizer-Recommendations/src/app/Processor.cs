@@ -1,33 +1,32 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Azure.CognitiveServices.Personalizer;
 using Microsoft.Azure.CognitiveServices.Personalizer.Models;
 using pelazem.rndgen;
 using pelazem.util;
 
-namespace app
+namespace PersonalizerPoC
 {
-	public class Common
+	public class Processor
 	{
-		public const string ENDPOINT = "https://westus2.api.cognitive.microsoft.com/";
-		public const string OUTPUTPATHROOT = @"c:\personalizer\";
+		#region Variables
 
-		private static IList<RankableAction> _actions = null;
-		private static IList<IList<object>> _userContexts = null;
+		private IList<RankableAction> _actions = null;
+		private IList<IList<object>> _userContexts = null;
 
-		public static int HowManyActions { get; set; } = 5;
-		public static int HowManyUserContexts { get; set; } = 5000;
-		public static int HowManyUsersPerSegment { get; set; } = 1000;
-		public static int SegmentPauseMilliseconds { get; set; } = 30000;
+		#endregion
 
-		public static IList<RankableAction> Actions
+		#region Properties
+
+		public int HowManyActions { get; private set; }
+		public int HowManyUserContexts { get; private set; }
+		public int HowManyUsersPerSegment { get; private set; }
+		public int SegmentPauseMilliseconds { get; private set; }
+
+		public IList<RankableAction> Actions
 		{
 			get
 			{
@@ -40,7 +39,7 @@ namespace app
 
 		// List of contexts to go through to get recommendation for each
 		// This could be how a known historical list of "who did what when" is used to train the Personalizer model by rewarding it for recommending what the user actually did
-		public static IList<IList<object>> UserContexts
+		public IList<IList<object>> UserContexts
 		{
 			get
 			{
@@ -51,19 +50,107 @@ namespace app
 			}
 		}
 
-		public static IDictionary<string, IDictionary<string, int>> ContextActionScores { get; } = new Dictionary<string, IDictionary<string, int>>();
+		public IDictionary<string, IDictionary<string, int>> ContextActionScores { get; } = new Dictionary<string, IDictionary<string, int>>();
 
+		#endregion
 
-		public static PersonalizerClient InitializePersonalizerClient(string endpoint, string apiKey)
+		/// <summary>
+		/// Approach
+		/// 1. Generate actions
+		/// 2. Generate user contexts
+		///		For each user context
+		///			Get actions
+		///			For each action, calculate a score for the user
+		///				If the top action recommended by the service also has the top like score, send 1 back to the API.
+		///				Variant a: ScoreHalfRewards = false, send back 0 to the API otherwise.
+		///				Variant b: ScoreHalfRewards = true, if the top action recommended by the service has the second-highest like score, send 0.5 back to the API.
+		/// </summary>
+		/// <param name="endpoint"></param>
+		/// <param name="apiKey"></param>
+		/// <param name="scoreHalfRewards"></param>
+		/// <returns></returns>
+		public async Task<List<SegmentScore>> ProcessAsync(string endpoint, string apiKey, bool scoreHalfRewards, int howManyActions, int howManyUserContexts, int howManyUsersPerSegment, int segmentPauseMilliseconds)
+		{
+			this.HowManyActions = howManyActions;
+			this.HowManyUserContexts = howManyUserContexts;
+			this.HowManyUsersPerSegment = howManyUsersPerSegment;
+			this.SegmentPauseMilliseconds = segmentPauseMilliseconds;
+
+			List<SegmentScore> result = new List<SegmentScore>();
+
+			int overallCounter = 0;
+
+			SegmentScore segmentScore = new SegmentScore();
+			segmentScore.Segment = 1;
+
+			using (PersonalizerClient client = InitializePersonalizerClient(endpoint, apiKey))
+			{
+				// Iterate through each context - i.e. each interaction where we want to get a ranked list of choices
+				foreach (var context in UserContexts)
+				{
+					overallCounter++;
+					segmentScore.Count++;
+
+					// Each interaction (context + choices -> ranked choices -> user behavior -> send feedback) requires a unique ID to correlate throughout
+					string eventId = Guid.NewGuid().ToString();
+
+					var rankingRequest = new RankRequest(Actions, context, null, eventId, false);
+					RankResponse response = await client.RankAsync(rankingRequest);
+
+					IDictionary<string, int> actionScoresForContext = this.GetActionScoresForContext(context);
+
+					double reward = CalculateReward(actionScoresForContext, response.RewardActionId, scoreHalfRewards);
+
+					Console.WriteLine($"Iteration {overallCounter} = reward {reward}");
+
+					await client.RewardAsync(response.EventId, new RewardRequest(reward));
+
+					segmentScore.TotalReward += reward;
+
+					if (reward > 0)
+					{
+						if (reward == 1)
+							segmentScore.CountRewardFull++;
+						else if (reward < 1)
+							segmentScore.CountRewardHalf++;
+					}
+
+					if (segmentScore.Count % this.HowManyUsersPerSegment == 0)
+					{
+						result.Add(segmentScore);
+
+						int newSegment = segmentScore.Segment + 1;
+						segmentScore = new SegmentScore() { Segment = newSegment };
+
+						if (overallCounter < this.HowManyUserContexts)
+						{
+							Console.WriteLine();
+							Console.WriteLine("Sleeping for service training...");
+							Thread.Sleep(this.SegmentPauseMilliseconds);
+							Console.WriteLine("Completed sleep, continuing");
+							Console.WriteLine();
+						}
+					}
+				}
+			}
+
+			return result;
+		}
+
+		#region API
+
+		private PersonalizerClient InitializePersonalizerClient(string endpoint, string apiKey)
 		{
 			PersonalizerClient client = new PersonalizerClient(new ApiKeyServiceClientCredentials(apiKey)) { Endpoint = endpoint };
 
 			return client;
 		}
 
+		#endregion
+
 		#region Actions
 
-		private static IList<RankableAction> GetActions()
+		private IList<RankableAction> GetActions()
 		{
 			List<RankableAction> actions = new List<RankableAction>();
 
@@ -72,7 +159,7 @@ namespace app
 			var levels = GetLevels();
 			var languages = GetLanguages();
 
-			for (int i = 1; i <= Common.HowManyActions; i++)
+			for (int i = 1; i <= this.HowManyActions; i++)
 			{
 				string resourceType = RandomGenerator.Categorical.GetCategorical(resourceTypes);
 
@@ -105,7 +192,7 @@ namespace app
 			return actions;
 		}
 
-		private static IList<Category<string>> GetResourceTypes()
+		private IList<Category<string>> GetResourceTypes()
 		{
 			List<Category<string>> resourceTypes = new List<Category<string>>
 			{
@@ -116,7 +203,7 @@ namespace app
 			return resourceTypes;
 		}
 
-		private static IList<Category<string>> GetLengths()
+		private IList<Category<string>> GetLengths()
 		{
 			List<Category<string>> lengths = new List<Category<string>>
 			{
@@ -130,7 +217,7 @@ namespace app
 			return lengths;
 		}
 
-		private static IList<Category<string>> GetLevels()
+		private IList<Category<string>> GetLevels()
 		{
 			List<Category<string>> levels = new List<Category<string>>
 			{
@@ -143,7 +230,7 @@ namespace app
 			return levels;
 		}
 
-		private static IList<Category<string>> GetLanguages()
+		private IList<Category<string>> GetLanguages()
 		{
 			List<Category<string>> levels = new List<Category<string>>
 			{
@@ -160,7 +247,7 @@ namespace app
 
 		#region Context
 
-		private static IList<IList<object>> GetContexts()
+		private IList<IList<object>> GetContexts()
 		{
 			IList<IList<object>> contexts = new List<IList<object>>();
 
@@ -171,7 +258,7 @@ namespace app
 			var ageGroups = GetAgeGroups();
 			var genders = GetGenders();
 
-			for (int i = 1; i <= Common.HowManyUserContexts; i++)
+			for (int i = 1; i <= this.HowManyUserContexts; i++)
 			{
 				string contextId = i.ToString();
 
@@ -202,8 +289,8 @@ namespace app
 				// Calculate points for each action for this context and store
 				Dictionary<string, int> actionScoresForThisContext = new Dictionary<string, int>();
 
-				foreach(RankableAction action in Common.Actions)
-					actionScoresForThisContext.Add(action.Id, Common.GetPoints(context, action.Id));
+				foreach(RankableAction action in this.Actions)
+					actionScoresForThisContext.Add(action.Id, this.GetPoints(context, action.Id));
 
 				ContextActionScores.Add(contextId, actionScoresForThisContext);
 			}
@@ -211,16 +298,16 @@ namespace app
 			return contexts;
 		}
 
-		public static IDictionary<string, int> GetActionScoresForContext(IList<object> context)
+		public IDictionary<string, int> GetActionScoresForContext(IList<object> context)
 		{
 			dynamic user = context[0];
 
-			IDictionary<string, int> actionScores = Common.ContextActionScores[user.id];
+			IDictionary<string, int> actionScores = ContextActionScores[user.id];
 
 			return actionScores;
 		}
 
-		private static IList<Category<string>> GetTimesOfDay()
+		private IList<Category<string>> GetTimesOfDay()
 		{
 			List<Category<string>> timesOfDay = new List<Category<string>>
 			{
@@ -233,7 +320,7 @@ namespace app
 			return timesOfDay;
 		}
 
-		private static IList<Category<string>> GetDaysOfWeek()
+		private IList<Category<string>> GetDaysOfWeek()
 		{
 			List<Category<string>> daysOfWeek = new List<Category<string>>
 			{
@@ -249,7 +336,7 @@ namespace app
 			return daysOfWeek;
 		}
 
-		private static IList<Category<string>> GetCountries()
+		private IList<Category<string>> GetCountries()
 		{
 			List<Category<string>> countries = new List<Category<string>>
 			{
@@ -263,7 +350,7 @@ namespace app
 			return countries;
 		}
 
-		private static IList<Category<string>> GetDevices()
+		private IList<Category<string>> GetDevices()
 		{
 			List<Category<string>> devices = new List<Category<string>>
 			{
@@ -275,7 +362,7 @@ namespace app
 			return devices;
 		}
 
-		private static IList<Category<string>> GetAgeGroups()
+		private IList<Category<string>> GetAgeGroups()
 		{
 			List<Category<string>> ageGroups = new List<Category<string>>
 			{
@@ -287,7 +374,7 @@ namespace app
 			return ageGroups;
 		}
 
-		private static IList<Category<string>> GetGenders()
+		private IList<Category<string>> GetGenders()
 		{
 			List<Category<string>> genders = new List<Category<string>>
 			{
@@ -303,9 +390,9 @@ namespace app
 
 		#region Points
 
-		private static int GetPoints(IList<object> context, string actionId)
+		private int GetPoints(IList<object> context, string actionId)
 		{
-			RankableAction action = Common.Actions.SingleOrDefault(a => a.Id == actionId);
+			RankableAction action = this.Actions.SingleOrDefault(a => a.Id == actionId);
 
 			if (action == null)
 				return 0;
@@ -324,7 +411,7 @@ namespace app
 			return points;
 		}
 
-		private static int GetPoints_TimeOfDay(string timeOfDay, dynamic features)
+		private int GetPoints_TimeOfDay(string timeOfDay, dynamic features)
 		{
 			int points = 0;
 
@@ -374,7 +461,7 @@ namespace app
 			return points;
 		}
 
-		private static int GetPoints_DayOfWeek(string dayOfWeek, dynamic features)
+		private int GetPoints_DayOfWeek(string dayOfWeek, dynamic features)
 		{
 			int points = 0;
 
@@ -424,7 +511,7 @@ namespace app
 			return points;
 		}
 
-		private static int GetPoints_Country(string country, dynamic features)
+		private int GetPoints_Country(string country, dynamic features)
 		{
 			int points = 0;
 
@@ -458,7 +545,7 @@ namespace app
 			return points;
 		}
 
-		private static int GetPoints_UserAttributes(dynamic user, dynamic features)
+		private int GetPoints_UserAttributes(dynamic user, dynamic features)
 		{
 			int points = 0;
 
@@ -551,15 +638,39 @@ namespace app
 
 		#endregion
 
-		public static string PersistResults(string results, string folderPath)
+		#region Reward
+
+		private double CalculateReward(IDictionary<string, int> actionScoresForContext, string recommendedActionId, bool scoreHalfRewards)
 		{
-			string fileName = DateTime.Now.Ticks.ToString() + ".txt";
-			string filePath = Path.Combine(folderPath, fileName);
+			double result = 0;
 
-			File.WriteAllText(filePath, results);
+			// Sort the action scores from highest to lowest
+			IOrderedEnumerable<KeyValuePair<string, int>> orderedActionsAndScores = actionScoresForContext.OrderByDescending(a => a.Value);
 
-			return filePath;
+			// Get the highest-scoring KVP
+			KeyValuePair<string, int> top = orderedActionsAndScores.ElementAt(0);
+
+			// Did the highest-scoring KVP action ID match the recommended action ID?
+			bool topMatched = (top.Key == recommendedActionId);
+
+			if (topMatched)
+				result = 1;
+			else if (scoreHalfRewards)
+			{
+				// If not, AND if we are set to calculate half-scores, check whether the second-scoring KVP action ID matches the recommended action ID
+				bool halfMatched = (orderedActionsAndScores.ElementAt(1).Key == recommendedActionId);
+
+				if (halfMatched)
+					result = 0.5;
+				else
+					result = 0;
+			}
+			else
+				result = 0;
+
+			return result;
 		}
 
+		#endregion
 	}
 }
