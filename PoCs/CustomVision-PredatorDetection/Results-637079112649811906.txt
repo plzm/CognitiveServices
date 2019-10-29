@@ -1,0 +1,374 @@
+t01.jpg
+10/29/2019 2:01:04 AM
+Classification (multi-class): none: 61.5%
+Classification (multi-class): wolf: 22.6%
+Classification (multi-class): squirrel: 15.3%
+Classification (multi-class): fishercat: 0.6%
+--------------------
+Classification (multi-label): squirrel: 0.8%
+Classification (multi-label): wolf: 0.0%
+Classification (multi-label): fishercat: 0.0%
+--------------------
+Detection: squirrel: 16.8% [ 0.3106077, 0.1988334, 0.686293244, 0.5279401 ]
+Detection: wolf: 4.7% [ 0.370309621, 0.4118719, 0.625046968, 0.5400779 ]
+Detection: squirrel: 3.4% [ 0.370309621, 0.4118719, 0.625046968, 0.5400779 ]
+Detection: wolf: 2.6% [ 0.3106077, 0.1988334, 0.686293244, 0.5279401 ]
+--------------------
+
+t02.jpg
+10/29/2019 2:01:29 AM
+Classification (multi-class): squirrel: 100.0%
+Classification (multi-class): fishercat: 0.0%
+Classification (multi-class): none: 0.0%
+Classification (multi-class): wolf: 0.0%
+--------------------
+Classification (multi-label): squirrel: 100.0%
+Classification (multi-label): fishercat: 0.0%
+Classification (multi-label): wolf: 0.0%
+--------------------
+Detection: fishercat: 38.8% [ 0.329566181, 0.3325057, 0.564273, 0.414340854 ]
+Detection: squirrel: 9.9% [ 0.149145752, 0.0288415551, 0.7593068, 0.7321577 ]
+Detection: squirrel: 6.4% [ 0.329566181, 0.3325057, 0.564273, 0.414340854 ]
+Detection: wolf: 5.0% [ 0.329566181, 0.3325057, 0.564273, 0.414340854 ]
+Detection: squirrel: 3.8% [ 0.364776045, 0.0327626765, 0.5722656, 0.467714161 ]
+--------------------
+
+t03.jpg
+10/29/2019 2:01:48 AM
+Classification (multi-class): squirrel: 99.9%
+Classification (multi-class): fishercat: 0.0%
+Classification (multi-class): none: 0.0%
+Classification (multi-class): wolf: 0.0%
+--------------------
+Classification (multi-label): squirrel: 100.0%
+Classification (multi-label): fishercat: 0.0%
+Classification (multi-label): wolf: 0.0%
+--------------------
+Detection: squirrel: 53.4% [ 0.186255962, 0.125136912, 0.61693275, 0.830144048 ]
+297,150 + 987,996 = 1284,1146
+--------------------
+
+t04.jpg
+10/29/2019 2:02:02 AM
+Classification (multi-class): squirrel: 99.9%
+Classification (multi-class): fishercat: 0.0%
+Classification (multi-class): wolf: 0.0%
+Classification (multi-class): none: 0.0%
+--------------------
+Classification (multi-label): squirrel: 100.0%
+Classification (multi-label): fishercat: 0.1%
+Classification (multi-label): wolf: 0.0%
+--------------------
+Detection: squirrel: 33.7% [ 0.02512154, 0.0478402376, 0.58631, 0.8984165 ]
+Detection: squirrel: 22.7% [ 0.238269, 0.143388778, 0.5796752, 0.846993566 ]
+Detection: wolf: 13.3% [ 0.0013987124, 0.0504365861, 0.5701548, 0.8949045 ]
+Detection: fishercat: 3.8% [ 0.02512154, 0.0478402376, 0.58631, 0.8984165 ]
+--------------------
+
+t05.jpg
+10/29/2019 2:02:11 AM
+Classification (multi-class): fishercat: 99.9%
+Classification (multi-class): squirrel: 0.1%
+Classification (multi-class): none: 0.0%
+Classification (multi-class): wolf: 0.0%
+--------------------
+Classification (multi-label): fishercat: 100.0%
+Classification (multi-label): squirrel: 0.1%
+Classification (multi-label): wolf: 0.0%
+--------------------
+Detection: fishercat: 90.3% [ 0.291511744, 0.135507047, 0.3744271, 0.598250449 ]
+Detection: fishercat: 1.4% [ 0.00194104575, 0.478409231, 0.05874785, 0.155889988 ]
+Detection: fishercat: 1.4% [ 0.3156318, 0.155933812, 0.332973182, 0.2857765 ]
+--------------------
+
+t06.jpg
+10/29/2019 2:02:18 AM
+Classification (multi-class): fishercat: 100.0%
+Classification (multi-class): wolf: 0.0%
+Classification (multi-class): none: 0.0%
+Classification (multi-class): squirrel: 0.0%
+--------------------
+Classification (multi-label): fishercat: 100.0%
+Classification (multi-label): wolf: 0.0%
+Classification (multi-label): squirrel: 0.0%
+--------------------
+Detection: fishercat: 97.2% [ 0.1805944, 0.1542435, 0.468839169, 0.6765617 ]
+Detection: fishercat: 1.7% [ 0.368015379, 0.617370248, 0.0612202, 0.142070711 ]
+Detection: fishercat: 1.6% [ 0.344522059, 0.168701068, 0.422962964, 0.295462966 ]
+Detection: fishercat: 1.3% [ 0.518173, 0.611729264, 0.0512646437, 0.142086923 ]
+--------------------
+
+t07.jpg
+10/29/2019 2:02:27 AM
+Classification (multi-class): fishercat: 100.0%
+Classification (multi-class): wolf: 0.0%
+Classification (multi-class): squirrel: 0.0%
+Classification (multi-class): none: 0.0%
+--------------------
+Classification (multi-label): fishercat: 100.0%
+Classification (multi-label): squirrel: 0.0%
+Classification (multi-label): wolf: 0.0%
+--------------------
+Detection: fishercat: 95.0% [ 0.233339459, 0.2537832, 0.6865034, 0.5692667 ]
+--------------------
+
+t08.jpg
+10/29/2019 2:02:29 AM
+Classification (multi-class): fishercat: 91.3%
+Classification (multi-class): squirrel: 6.4%
+Classification (multi-class): none: 1.4%
+Classification (multi-class): wolf: 1.0%
+--------------------
+Classification (multi-label): fishercat: 89.1%
+Classification (multi-label): squirrel: 2.3%
+Classification (multi-label): wolf: 0.0%
+--------------------
+Detection: fishercat: 68.2% [ 0.174002409, 0.127547741, 0.389195383, 0.566876054 ]
+Detection: fishercat: 7.6% [ 0.170101941, 0.145328879, 0.336139441, 0.263639748 ]
+Detection: squirrel: 1.8% [ 0.174002409, 0.127547741, 0.389195383, 0.566876054 ]
+--------------------
+
+t09.jpg
+10/29/2019 2:02:42 AM
+Classification (multi-class): wolf: 99.8%
+Classification (multi-class): squirrel: 0.1%
+Classification (multi-class): none: 0.1%
+Classification (multi-class): fishercat: 0.0%
+--------------------
+Classification (multi-label): wolf: 100.0%
+Classification (multi-label): squirrel: 0.0%
+Classification (multi-label): fishercat: 0.0%
+--------------------
+Detection: wolf: 95.3% [ 0.370567679, 0.0184781551, 0.620228767, 0.940539 ]
+Detection: squirrel: 1.2% [ 0.428793252, 0.0254620612, 0.568393, 0.932949662 ]
+--------------------
+
+t10.jpg
+10/29/2019 2:02:51 AM
+Classification (multi-class): wolf: 99.7%
+Classification (multi-class): squirrel: 0.2%
+Classification (multi-class): none: 0.0%
+Classification (multi-class): fishercat: 0.0%
+--------------------
+Classification (multi-label): wolf: 100.0%
+Classification (multi-label): squirrel: 0.5%
+Classification (multi-label): fishercat: 0.0%
+--------------------
+Detection: wolf: 84.4% [ 0.194976822, 0.03218481, 0.483750165, 0.830201745 ]
+--------------------
+
+t11.jpg
+10/29/2019 2:02:53 AM
+Classification (multi-class): wolf: 99.8%
+Classification (multi-class): squirrel: 0.1%
+Classification (multi-class): none: 0.0%
+Classification (multi-class): fishercat: 0.0%
+--------------------
+Classification (multi-label): wolf: 100.0%
+Classification (multi-label): squirrel: 0.1%
+Classification (multi-label): fishercat: 0.0%
+--------------------
+Detection: wolf: 85.1% [ 0.0186501145, 0.0345468223, 0.8711942, 0.6009308 ]
+Detection: squirrel: 3.6% [ 0.03227228, 0.3700519, 0.598272741, 0.6039902 ]
+--------------------
+
+t12.jpg
+10/29/2019 2:03:03 AM
+Classification (multi-class): wolf: 99.6%
+Classification (multi-class): none: 0.3%
+Classification (multi-class): squirrel: 0.1%
+Classification (multi-class): fishercat: 0.0%
+--------------------
+Classification (multi-label): wolf: 99.8%
+Classification (multi-label): squirrel: 0.0%
+Classification (multi-label): fishercat: 0.0%
+--------------------
+Detection: wolf: 90.4% [ 0.338291049, 0.100475907, 0.4472425, 0.5639098 ]
+--------------------
+
+t13.jpg
+10/29/2019 2:03:10 AM
+Classification (multi-class): none: 56.9%
+Classification (multi-class): squirrel: 32.0%
+Classification (multi-class): wolf: 9.6%
+Classification (multi-class): fishercat: 1.5%
+--------------------
+Classification (multi-label): squirrel: 6.3%
+Classification (multi-label): wolf: 0.1%
+Classification (multi-label): fishercat: 0.0%
+--------------------
+Detection: squirrel: 91.8% [ 0.3416858, 0.08475831, 0.404816478, 0.8494344 ]
+Detection: squirrel: 88.1% [ 0.00227704644, 0.165944546, 0.3254472, 0.7187897 ]
+Detection: squirrel: 85.5% [ 0.6819387, 0.119971126, 0.318051279, 0.708036661 ]
+Detection: wolf: 6.3% [ 0.00327737629, 0.134521008, 0.326186419, 0.7115584 ]
+Detection: fishercat: 2.2% [ 0.00327737629, 0.134521008, 0.326186419, 0.7115584 ]
+Detection: fishercat: 2.1% [ 0.680811048, 0.12393713, 0.319178939, 0.7859924 ]
+Detection: wolf: 1.9% [ 0.680811048, 0.12393713, 0.319178939, 0.7859924 ]
+--------------------
+
+t14.jpg
+10/29/2019 2:03:11 AM
+Classification (multi-class): none: 82.7%
+Classification (multi-class): squirrel: 13.2%
+Classification (multi-class): wolf: 3.3%
+Classification (multi-class): fishercat: 0.8%
+--------------------
+Classification (multi-label): squirrel: 2.4%
+Classification (multi-label): wolf: 0.0%
+Classification (multi-label): fishercat: 0.0%
+--------------------
+Detection: squirrel: 87.2% [ 0.342986852, 0.173406973, 0.5331911, 0.4516222 ]
+--------------------
+
+t15.JPG
+10/29/2019 2:03:12 AM
+Classification (multi-class): none: 46.3%
+Classification (multi-class): fishercat: 32.2%
+Classification (multi-class): squirrel: 19.1%
+Classification (multi-class): wolf: 2.4%
+--------------------
+Classification (multi-label): fishercat: 1.1%
+Classification (multi-label): squirrel: 0.5%
+Classification (multi-label): wolf: 0.0%
+--------------------
+Detection: fishercat: 90.8% [ 0.1304188, 0.223077774, 0.5863631, 0.624469042 ]
+Detection: squirrel: 17.1% [ 0.06474435, 0.165025145, 0.65623045, 0.738068342 ]
+Detection: wolf: 1.3% [ 0.107133329, 0.1922428, 0.5892591, 0.5971413 ]
+--------------------
+
+t16.jpg
+10/29/2019 2:03:15 AM
+Classification (multi-class): none: 77.9%
+Classification (multi-class): squirrel: 15.8%
+Classification (multi-class): wolf: 4.7%
+Classification (multi-class): fishercat: 1.6%
+--------------------
+Classification (multi-label): squirrel: 1.6%
+Classification (multi-label): wolf: 0.0%
+Classification (multi-label): fishercat: 0.0%
+--------------------
+Detection: squirrel: 85.2% [ 0.0613295734, 0.22562924, 0.607556939, 0.64569366 ]
+Detection: squirrel: 62.7% [ 0.480584532, 0.108184278, 0.445501775, 0.625999153 ]
+Detection: wolf: 1.6% [ 0.5449921, 0.118371308, 0.3784256, 0.6105004 ]
+Detection: fishercat: 1.4% [ 0.5449921, 0.118371308, 0.3784256, 0.6105004 ]
+--------------------
+
+t17.jpg
+10/29/2019 2:03:16 AM
+Classification (multi-class): none: 94.0%
+Classification (multi-class): squirrel: 3.2%
+Classification (multi-class): wolf: 2.1%
+Classification (multi-class): fishercat: 0.7%
+--------------------
+Classification (multi-label): squirrel: 0.2%
+Classification (multi-label): wolf: 0.0%
+Classification (multi-label): fishercat: 0.0%
+--------------------
+Detection: fishercat: 7.9% [ 0.482944071, 0, 0.456828058, 0.24848631 ]
+Detection: fishercat: 7.8% [ 0.0312466025, 0, 0.499004424, 0.335945427 ]
+Detection: squirrel: 5.0% [ 0.0312466025, 0, 0.499004424, 0.335945427 ]
+Detection: wolf: 4.2% [ 0.0312466025, 0, 0.499004424, 0.335945427 ]
+Detection: wolf: 3.9% [ 0.482944071, 0, 0.456828058, 0.24848631 ]
+Detection: squirrel: 3.4% [ 0.482944071, 0, 0.456828058, 0.24848631 ]
+Detection: fishercat: 2.7% [ 0.7955297, 0.802054465, 0.0174632668, 0.0282880664 ]
+Detection: fishercat: 2.6% [ 0.861213, 0.0178144723, 0.138776958, 0.300847828 ]
+Detection: fishercat: 2.3% [ 0.598759, 0.00121284276, 0.209698081, 0.237698823 ]
+Detection: wolf: 2.0% [ 0.861213, 0.0178144723, 0.138776958, 0.300847828 ]
+Detection: wolf: 1.6% [ 0.598759, 0.00121284276, 0.209698081, 0.237698823 ]
+Detection: squirrel: 1.4% [ 0.861213, 0.0178144723, 0.138776958, 0.300847828 ]
+Detection: fishercat: 1.3% [ 0.242903367, 0, 0.182849631, 0.0444864258 ]
+Detection: squirrel: 1.2% [ 0.598759, 0.00121284276, 0.209698081, 0.237698823 ]
+Detection: fishercat: 1.2% [ 0.257887781, 0.219990388, 0.0515948534, 0.05735226 ]
+Detection: fishercat: 1.1% [ 0.7509309, 0, 0.135948241, 0.239468187 ]
+--------------------
+
+t18.jpg
+10/29/2019 2:03:18 AM
+Classification (multi-class): none: 95.8%
+Classification (multi-class): squirrel: 2.5%
+Classification (multi-class): wolf: 1.3%
+Classification (multi-class): fishercat: 0.4%
+--------------------
+Classification (multi-label): squirrel: 0.7%
+Classification (multi-label): fishercat: 0.0%
+Classification (multi-label): wolf: 0.0%
+--------------------
+Detection: fishercat: 5.8% [ 0.5603323, 0, 0.433162034, 0.396171927 ]
+Detection: wolf: 2.6% [ 0.5603323, 0, 0.433162034, 0.396171927 ]
+Detection: squirrel: 2.6% [ 0.5603323, 0, 0.433162034, 0.396171927 ]
+Detection: fishercat: 2.6% [ 0, 0.00286883116, 0.300074667, 0.336969644 ]
+Detection: squirrel: 1.7% [ 0, 0.00286883116, 0.300074667, 0.336969644 ]
+Detection: wolf: 1.7% [ 0, 0.00286883116, 0.300074667, 0.336969644 ]
+Detection: fishercat: 1.3% [ 0.12226481, 0.323869348, 0.204688281, 0.134249032 ]
+Detection: wolf: 1.2% [ 0.5028204, 0.310554981, 0.242071152, 0.13307932 ]
+Detection: fishercat: 1.2% [ 0.5028204, 0.310554981, 0.242071152, 0.13307932 ]
+Detection: wolf: 1.2% [ 0.4181217, 0.00745119154, 0.12674439, 0.35235548 ]
+Detection: wolf: 1.1% [ 0.2750483, 0.0110273957, 0.113927037, 0.348107 ]
+Detection: fishercat: 1.1% [ 0.121550262, 0, 0.408790529, 0.37063235 ]
+Detection: wolf: 1.1% [ 0.121550262, 0, 0.408790529, 0.37063235 ]
+Detection: wolf: 1.0% [ 0.12226481, 0.323869348, 0.204688281, 0.134249032 ]
+--------------------
+
+t19.jpg
+10/29/2019 2:03:23 AM
+Classification (multi-class): none: 84.8%
+Classification (multi-class): squirrel: 10.5%
+Classification (multi-class): wolf: 4.3%
+Classification (multi-class): fishercat: 0.4%
+--------------------
+Classification (multi-label): squirrel: 0.7%
+Classification (multi-label): wolf: 0.0%
+Classification (multi-label): fishercat: 0.0%
+--------------------
+Detection: wolf: 44.1% [ 0.308051884, 0.5425747, 0.224205315, 0.368048966 ]
+Detection: fishercat: 16.7% [ 0.308051884, 0.5425747, 0.224205315, 0.368048966 ]
+Detection: squirrel: 8.7% [ 0.308051884, 0.5425747, 0.224205315, 0.368048966 ]
+Detection: wolf: 2.7% [ 0.285143375, 0.55738914, 0.137789845, 0.220810533 ]
+Detection: fishercat: 2.2% [ 0.137357727, 0.184348837, 0.126596734, 0.221643969 ]
+Detection: wolf: 2.1% [ 0.137357727, 0.184348837, 0.126596734, 0.221643969 ]
+Detection: squirrel: 1.6% [ 0.137357727, 0.184348837, 0.126596734, 0.221643969 ]
+Detection: fishercat: 1.4% [ 0.170317635, 0.222825617, 0.0580400825, 0.126715809 ]
+Detection: fishercat: 1.4% [ 0.407785475, 0.181586057, 0.125029862, 0.0835199356 ]
+Detection: wolf: 1.3% [ 0.2659685, 0.194160759, 0.120195538, 0.321869552 ]
+Detection: wolf: 1.3% [ 0.0383168459, 0.00311028957, 0.7357142, 0.677960753 ]
+Detection: fishercat: 1.3% [ 0.146710679, 0.228422865, 0.0527107567, 0.106041834 ]
+Detection: squirrel: 1.2% [ 0.0383168459, 0.00311028957, 0.7357142, 0.677960753 ]
+Detection: fishercat: 1.2% [ 0.285143375, 0.55738914, 0.137789845, 0.220810533 ]
+Detection: wolf: 1.1% [ 0.385848075, 0.153875783, 0.171992451, 0.133501515 ]
+Detection: fishercat: 1.1% [ 0.1472915, 0.276033878, 0.05669944, 0.119699836 ]
+Detection: fishercat: 1.0% [ 0.2659685, 0.194160759, 0.120195538, 0.321869552 ]
+--------------------
+
+t20.jpg
+10/29/2019 2:03:27 AM
+Classification (multi-class): none: 94.7%
+Classification (multi-class): squirrel: 3.4%
+Classification (multi-class): wolf: 1.5%
+Classification (multi-class): fishercat: 0.4%
+--------------------
+Classification (multi-label): squirrel: 0.7%
+Classification (multi-label): fishercat: 0.0%
+Classification (multi-label): wolf: 0.0%
+--------------------
+Detection: wolf: 12.7% [ 0.421738148, 0.7517126, 0.124959648, 0.192831576 ]
+Detection: fishercat: 11.7% [ 0.421738148, 0.7517126, 0.124959648, 0.192831576 ]
+Detection: squirrel: 7.1% [ 0.421738148, 0.7517126, 0.124959648, 0.192831576 ]
+Detection: fishercat: 6.5% [ 0.236122131, 0.352509141, 0.05447477, 0.1077373 ]
+Detection: wolf: 5.0% [ 0.115984961, 0.597729564, 0.467047274, 0.346086085 ]
+Detection: wolf: 3.7% [ 0.236122131, 0.352509141, 0.05447477, 0.1077373 ]
+Detection: wolf: 3.7% [ 0.2622285, 0.6419952, 0.161263585, 0.2705841 ]
+Detection: squirrel: 3.1% [ 0.236122131, 0.352509141, 0.05447477, 0.1077373 ]
+Detection: squirrel: 2.5% [ 0.115984961, 0.597729564, 0.467047274, 0.346086085 ]
+Detection: fishercat: 2.3% [ 0.115984961, 0.597729564, 0.467047274, 0.346086085 ]
+Detection: fishercat: 1.9% [ 0.4399686, 0.437177837, 0.06709278, 0.04566598 ]
+Detection: fishercat: 1.5% [ 0.2622285, 0.6419952, 0.161263585, 0.2705841 ]
+Detection: wolf: 1.4% [ 0.4399686, 0.437177837, 0.06709278, 0.04566598 ]
+Detection: fishercat: 1.3% [ 0.485323071, 0.434158, 0.0737071037, 0.0449472666 ]
+Detection: fishercat: 1.2% [ 0.490544975, 0.780462146, 0.07498622, 0.133959711 ]
+Detection: squirrel: 1.1% [ 0.2622285, 0.6419952, 0.161263585, 0.2705841 ]
+Detection: fishercat: 1.1% [ 0.152467847, 0.3007567, 0.134641111, 0.212784886 ]
+Detection: fishercat: 1.0% [ 0.567946434, 0.438530952, 0.049701333, 0.0349576771 ]
+Detection: wolf: 1.0% [ 0.152467847, 0.3007567, 0.134641111, 0.212784886 ]
+Detection: wolf: 1.0% [ 0.485323071, 0.434158, 0.0737071037, 0.0449472666 ]
+--------------------
+

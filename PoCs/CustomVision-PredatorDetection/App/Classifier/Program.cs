@@ -15,11 +15,16 @@ namespace PredatorDetection
 		private static string _apiEndpoint = "https://PROVIDE.cognitiveservices.azure.com/";
 		private static string _predictionKey = "PROVIDE";
 
-		private static Guid _projectGuid_Classification = new Guid("PROVIDE");
-		private static string _modelName_Classification = "PROVIDE";
+		private static Guid _projectGuid_Classification_Multiclass = new Guid("PROVIDE");
+		private static string _modelName_Classification_Multiclass = "PROVIDE";
+
+		private static Guid _projectGuid_Classification_Multilabel = new Guid("PROVIDE");
+		private static string _modelName_Classification_Multilabel = "PROVIDE";
 
 		private static Guid _projectGuid_Detection = new Guid("PROVIDE");
 		private static string _modelName_Detection = "PROVIDE";
+
+		private static string _resultsFilePath = $@"PROVIDE";
 
 		static void Main(string[] args)
 		{
@@ -33,49 +38,53 @@ namespace PredatorDetection
 		{
 			List<string> filePaths = Directory.GetFiles(@"..\..\..\..\..\Images\test\", "*.*", SearchOption.TopDirectoryOnly).ToList();
 
-			CustomVisionPredictionClient endpoint = new CustomVisionPredictionClient()
-			{
-				ApiKey = _predictionKey,
-				Endpoint = _apiEndpoint
-			};
-
 			StringBuilder sb = new StringBuilder();
 
-			foreach (string filePath in filePaths)
+			using (CustomVisionPredictionClient endpoint = new CustomVisionPredictionClient() { ApiKey = _predictionKey, Endpoint = _apiEndpoint })
 			{
-				sb.AppendLine(Path.GetFileName(filePath));
-
-				using (var stream = File.OpenRead(filePath))
+				foreach (string filePath in filePaths)
 				{
-					ImagePrediction classificationResult = await endpoint.ClassifyImageAsync(_projectGuid_Classification, _modelName_Classification, stream);
-					
-					// Loop over each classification and write out the results
-					foreach (var c in classificationResult.Predictions.OrderByDescending(p => p.Probability))
+					sb.AppendLine(Path.GetFileName(filePath));
+					sb.AppendLine(DateTime.UtcNow.ToString());
+
+					using (var stream = File.OpenRead(filePath))
 					{
-						string line = $"Classification: {c.TagName}: {c.Probability:P1} " + (c.BoundingBox != null ? $"[ {c.BoundingBox.Left}, {c.BoundingBox.Top}, {c.BoundingBox.Width}, {c.BoundingBox.Height} ]" : "[No bounding box]");
+						ImagePrediction classificationResult = await endpoint.ClassifyImageAsync(_projectGuid_Classification_Multiclass, _modelName_Classification_Multiclass, stream);
 
-						sb.AppendLine(line);
+						// Loop over each classification and write out the results
+						foreach (var c in classificationResult.Predictions.OrderByDescending(p => p.Probability))
+							sb.AppendLine($"Classification (multi-class): {c.TagName}: {c.Probability:P1}");
 					}
-				}
 
-				using (var stream = File.OpenRead(filePath))
-				{
-					ImagePrediction detectionResult = await endpoint.DetectImageAsync(_projectGuid_Detection, _modelName_Detection, stream);
+					sb.AppendLine("--------------------");
 
-					// Loop over each detection and write out the results
-					foreach (var c in detectionResult.Predictions.OrderByDescending(p => p.Probability))
+					using (var stream = File.OpenRead(filePath))
 					{
-						string line = $"Detection: {c.TagName}: {c.Probability:P1} " + (c.BoundingBox != null ? $"[ {c.BoundingBox.Left}, {c.BoundingBox.Top}, {c.BoundingBox.Width}, {c.BoundingBox.Height} ]" : "[No bounding box]");
+						ImagePrediction classificationResult = await endpoint.ClassifyImageAsync(_projectGuid_Classification_Multilabel, _modelName_Classification_Multilabel, stream);
 
-						sb.AppendLine(line);
+						// Loop over each classification and write out the results
+						foreach (var c in classificationResult.Predictions.OrderByDescending(p => p.Probability))
+							sb.AppendLine($"Classification (multi-label): {c.TagName}: {c.Probability:P1}");
 					}
-				}
 
-				sb.AppendLine();
+					sb.AppendLine("--------------------");
+
+					using (var stream = File.OpenRead(filePath))
+					{
+						ImagePrediction detectionResult = await endpoint.DetectImageAsync(_projectGuid_Detection, _modelName_Detection, stream);
+
+						// Loop over each detection and write out the results
+						foreach (var c in detectionResult.Predictions.OrderByDescending(p => p.Probability))
+							sb.AppendLine($"Detection: {c.TagName}: {c.Probability:P1} " + $"[ {c.BoundingBox.Left}, {c.BoundingBox.Top}, {c.BoundingBox.Width}, {c.BoundingBox.Height} ]");
+					}
+
+					sb.AppendLine("--------------------");
+					sb.AppendLine();
+				}
 			}
 
 			string final = sb.ToString();
-			File.WriteAllText(@"C:\Users\paelaz\Desktop\hack.txt", final);
+			File.WriteAllText(_resultsFilePath, final);
 		}
 	}
 }
