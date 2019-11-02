@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace PredatorDetection
 {
 	class Program
 	{
-		private static string _apiEndpoint = "https://PROVIDE.cognitiveservices.azure.com/";
+		private static string _apiEndpoint = "https://PROVIDE-prediction.cognitiveservices.azure.com/";
 		private static string _predictionKey = "PROVIDE";
 
 		private static Guid _projectGuid_Classification_Multiclass = new Guid("PROVIDE");
@@ -24,7 +25,7 @@ namespace PredatorDetection
 		private static Guid _projectGuid_Detection = new Guid("PROVIDE");
 		private static string _modelName_Detection = "PROVIDE";
 
-		private static string _resultsFilePath = $@"PROVIDE";
+		private static string _resultsFilePath = $@"PROVIDE\results-{DateTime.UtcNow.Ticks}.txt";
 
 		static void Main(string[] args)
 		{
@@ -36,6 +37,7 @@ namespace PredatorDetection
 
 		public static async Task Predict()
 		{
+			// Use test images in this repo - substitute other as needed. Note, the API also takes URLs to pictures, in this case I am sending picture as request payload.
 			List<string> filePaths = Directory.GetFiles(@"..\..\..\..\..\Images\test\", "*.*", SearchOption.TopDirectoryOnly).ToList();
 
 			StringBuilder sb = new StringBuilder();

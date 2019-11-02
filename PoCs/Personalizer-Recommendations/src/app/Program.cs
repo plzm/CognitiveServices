@@ -10,7 +10,7 @@ namespace PersonalizerPoC
 	{
 		// Eventually load these from some config repo
 		public const string ENDPOINT = "https://PROVIDE.cognitiveservices.azure.com/";
-		public const string APIKEY = "";
+		public const string APIKEY = "PROVIDE";
 
 		public const bool SCOREHALFREWARDS = true;
 		public const int HOWMANYACTIONS = 5;
@@ -18,7 +18,7 @@ namespace PersonalizerPoC
 		public const int HOWMANYUSERSPERSEGMENT = 100;
 		public const int SEGMENTPAUSEMILLISECONDS = 60000;
 
-		public const string OUTPUTPATH = @"C:\PoCs\personalizer\";
+		public const string OUTPUTPATH = @"PROVIDE\output\";
 
 
 		static void Main(string[] args)

@@ -1,5 +1,0 @@
-Segment: 1 | Count: 1000 | Total Reward: -160 | Count Reward Half: 0 | Count Reward Full: 420
-Segment: 2 | Count: 1000 | Total Reward: 16 | Count Reward Half: 0 | Count Reward Full: 508
-Segment: 3 | Count: 1000 | Total Reward: -24 | Count Reward Half: 0 | Count Reward Full: 488
-Segment: 4 | Count: 1000 | Total Reward: 86 | Count Reward Half: 0 | Count Reward Full: 543
-Segment: 5 | Count: 1000 | Total Reward: 30 | Count Reward Half: 0 | Count Reward Full: 515

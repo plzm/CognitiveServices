@@ -94,17 +94,22 @@ namespace PersonalizerPoC
 					// Each interaction (context + choices -> ranked choices -> user behavior -> send feedback) requires a unique ID to correlate throughout
 					string eventId = Guid.NewGuid().ToString();
 
-					var rankingRequest = new RankRequest(Actions, context, null, eventId, false);
+					var rankingRequest = new RankRequest(this.Actions, context, null, eventId, false);
 					RankResponse response = await client.RankAsync(rankingRequest);
 
+					// These are our calcs for points, for THIS user/context, for each of the actions
 					IDictionary<string, int> actionScoresForContext = this.GetActionScoresForContext(context);
 
+					// Using THIS user/context's points for each action, calculate a reward based on whether the API "got it right"
 					double reward = CalculateReward(actionScoresForContext, response.RewardActionId, scoreHalfRewards);
 
 					Console.WriteLine($"Iteration {overallCounter} = reward {reward}");
 
+					// Send feedback to the API - for this event (ranking interaction), what is the reward we calculated
 					await client.RewardAsync(response.EventId, new RewardRequest(reward));
 
+					// We are tracking segments of users so we can more clearly track reward accumulation / API performance
+					// Manage this segment's rewards here
 					segmentScore.TotalReward += reward;
 
 					if (reward > 0)
@@ -122,6 +127,9 @@ namespace PersonalizerPoC
 						int newSegment = segmentScore.Segment + 1;
 						segmentScore = new SegmentScore() { Segment = newSegment };
 
+						// As we complete each segment of users let's pause for a time to allow the API to retrain
+						// This is artificial so we can watch the API's performance improve in this contrived app
+						// In the real world we wouldn't do this since ongoing usage would be far lengthier than a quick sample app like this
 						if (overallCounter < this.HowManyUserContexts)
 						{
 							Console.WriteLine();
@@ -287,10 +295,11 @@ namespace PersonalizerPoC
 
 
 				// Calculate points for each action for this context and store
+				// IoW, how much does this context (user) "like" each of the actions
 				Dictionary<string, int> actionScoresForThisContext = new Dictionary<string, int>();
 
 				foreach(RankableAction action in this.Actions)
-					actionScoresForThisContext.Add(action.Id, this.GetPoints(context, action.Id));
+					actionScoresForThisContext.Add(action.Id, this.GetPoints(context, action));
 
 				ContextActionScores.Add(contextId, actionScoresForThisContext);
 			}
@@ -302,7 +311,7 @@ namespace PersonalizerPoC
 		{
 			dynamic user = context[0];
 
-			IDictionary<string, int> actionScores = ContextActionScores[user.id];
+			IDictionary<string, int> actionScores = this.ContextActionScores[user.id];
 
 			return actionScores;
 		}
@@ -390,10 +399,14 @@ namespace PersonalizerPoC
 
 		#region Points
 
-		private int GetPoints(IList<object> context, string actionId)
+		/// <summary>
+		/// For a context (user), calculate its points for an action (i.e. how much does the user "like" the action)
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="action"></param>
+		/// <returns></returns>
+		private int GetPoints(IList<object> context, RankableAction action)
 		{
-			RankableAction action = this.Actions.SingleOrDefault(a => a.Id == actionId);
-
 			if (action == null)
 				return 0;
 
