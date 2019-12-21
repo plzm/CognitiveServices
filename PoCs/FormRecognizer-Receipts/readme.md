@@ -1,10 +1,8 @@
-## Receipt Ingestion Proof of Concept (PoC)
+## Receipt Ingestion and Address Analysis Proof of Concept (PoC)
 
-This PoC shows ingestion of typical point of sale receipt images, with analysis and content extraction. The Form Recognizer Azure AI service is used (this service is currently in Preview). It has specific receipt ingestion capability.
+This PoC shows ingestion of typical point of sale receipt images, with analysis and content extraction including addresses. The Form Recognizer Azure AI service is used (this service is currently in Preview). It has specific receipt ingestion capability. The Azure Maps service is used for address analysis.
 
-The architecture for this PoC (see below for diagram) starts with Azure blob storage. A storage access policy is set on storage so that images can be stored securely (not publicly accessible), but URLs with policy-based access tokens can be generated so that services like the Azure AI Cognitive Services used in this PoC can still access the images via secured URLs.
-
-![PoC Architecture](architecture-receipts.png)
+![PoC Architecture](architecture.png)
 
 When a receipt image is uploaded to blob storage, an Event Grid event is raised. This triggers an Azure Function, which gets metadata about the image, including its secured URL. This first Azure Function then invokes the Form Recognizer's Analyze Receipt endpoint and sends it the secured URL of the receipt. This is an asynchronous operation which returns a URL to check status and retrieve results (when processing is finished) of receipt analysis. This Function concludes by assembling some operational metadata and placing it onto a queue.
 
@@ -12,26 +10,7 @@ The queue triggers a second Azure Function. That Function retrieves operation me
 
 This PoC uses receipt images (in the TestImages folder). All of these were sourced from searches on bing.com/images. All images are believed to be in the public domain and free of copyright or other constraints. Please advise if this is incorrect.
 
-![Test result data](poc-results.xlsx) contains the following fields:
-- ReceiptGuid
-- Subtotal
-- Tax
-- Total
-- MerchantName
-- MerchantAddress
-- MerchantPhoneNumber
-- TransactionDate
-- TransactionTime
-- ImageUrl
-- JsonFormRecognizer
-- DateCreated
-- DateUpdated
-
-ImageUrl is the secured URL to the image, stored in Azure blob storage. The storage account is not publicly accessible; a storage access policy is in place. The ImageUrls in the data have an access token included in the URL, to show how images can be stored securely against general public access, but be made accessible via URL for APIs like the Azure AI cognitive services.
-
-JsonFormRecognizer is the complete JSON output from the Form Recognizer Azure AI Cognitive Service. It can be made more easily readable in a good JSON editor like Visual Studio Code with a JSON extension, or in other text editors with appropriate JSON capabilities. Alternately, to avoid tool extension downloads/installs, the JSON can be pasted into an online JSON renderer like that at https://jsonformatter.curiousconcept.com/.
-
-The fields from Subtotal through TransactionTime are all extracted from JsonFormRecognizer via SQL JSON_VALUE() calls, and surfaced as standalone fields for greater readability. See ![receipts.sql](AzureDeploy/receipts.sql) for details.
+Test images are in the TestReceipts folder. Test results for documents and addresses are in the TestResults folder.
 
 Resources:
 * [Form Recognizer Azure AI Cognitive Service Overview](https://docs.microsoft.com/azure/cognitive-services/form-recognizer/overview)

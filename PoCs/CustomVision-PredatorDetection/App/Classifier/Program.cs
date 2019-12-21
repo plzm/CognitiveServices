@@ -13,19 +13,19 @@ namespace PredatorDetection
 {
 	class Program
 	{
-		private static string _apiEndpoint = "https://PROVIDE-prediction.cognitiveservices.azure.com/";
-		private static string _predictionKey = "PROVIDE";
+		private static string _apiEndpoint = "https://pzcustomvision-prediction.cognitiveservices.azure.com/";
+		private static string _predictionKey = "d04f4fe01e5c477092a639b91347ee67";
 
-		private static Guid _projectGuid_Classification_Multiclass = new Guid("PROVIDE");
-		private static string _modelName_Classification_Multiclass = "PROVIDE";
+		private static Guid _projectGuid_Classification_Multiclass = new Guid("79e86d2b-3631-4178-b516-05fc8a8196b4");
+		private static string _modelName_Classification_Multiclass = "Iteration1";
 
-		private static Guid _projectGuid_Classification_Multilabel = new Guid("PROVIDE");
-		private static string _modelName_Classification_Multilabel = "PROVIDE";
+		private static Guid _projectGuid_Classification_Multilabel = new Guid("21c60467-b8c6-4269-8d77-88bdc5c01c9c");
+		private static string _modelName_Classification_Multilabel = "Iteration1";
 
-		private static Guid _projectGuid_Detection = new Guid("PROVIDE");
-		private static string _modelName_Detection = "PROVIDE";
+		private static Guid _projectGuid_Detection = new Guid("23e80a8e-b65a-4ab1-9a3a-fc2825cdc9bd");
+		private static string _modelName_Detection = "Iteration4";
 
-		private static string _resultsFilePath = $@"PROVIDE\results-{DateTime.UtcNow.Ticks}.txt";
+		private static string _resultsFilePath = $@"C:\Users\paelaz\Code\plzm.github\azure-cognitive\PoCs\CustomVision-PredatorDetection\Results-{DateTime.UtcNow.Ticks}.txt";
 
 		static void Main(string[] args)
 		{

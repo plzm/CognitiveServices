@@ -1,0 +1,10 @@
+Segment: 1 | Count: 100 | Total Reward: 9 | Count Reward Half: 0 | Count Reward Full: 9
+Segment: 2 | Count: 100 | Total Reward: 53 | Count Reward Half: 0 | Count Reward Full: 53
+Segment: 3 | Count: 100 | Total Reward: 52 | Count Reward Half: 0 | Count Reward Full: 52
+Segment: 4 | Count: 100 | Total Reward: 62 | Count Reward Half: 0 | Count Reward Full: 62
+Segment: 5 | Count: 100 | Total Reward: 66 | Count Reward Half: 0 | Count Reward Full: 66
+Segment: 6 | Count: 100 | Total Reward: 61 | Count Reward Half: 0 | Count Reward Full: 61
+Segment: 7 | Count: 100 | Total Reward: 61 | Count Reward Half: 0 | Count Reward Full: 61
+Segment: 8 | Count: 100 | Total Reward: 63 | Count Reward Half: 0 | Count Reward Full: 63
+Segment: 9 | Count: 100 | Total Reward: 59 | Count Reward Half: 0 | Count Reward Full: 59
+Segment: 10 | Count: 100 | Total Reward: 58 | Count Reward Half: 0 | Count Reward Full: 58

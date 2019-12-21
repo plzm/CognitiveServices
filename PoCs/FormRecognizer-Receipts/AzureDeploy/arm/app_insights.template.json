@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+		"location": {
+			"defaultValue": "eastus",
+            "type": "String"
+		},
+        "instance_name": {
+            "defaultValue": "5becomm-ai",
+            "type": "String"
+        }
+    },
+    "variables": {
+		"api_version": "2015-05-01"
+	},
+    "resources": [
+        {
+            "type": "microsoft.insights/components",
+            "apiVersion": "[variables('api_version')]",
+            "name": "[parameters('instance_name')]",
+            "location": "[parameters('location')]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaAIExtension"
+            }
+        }
+	],
+	"outputs": {
+		"app_insights_instrumentation_key": {
+			"value": "[reference(resourceId('Microsoft.Insights/components', parameters('instance_name')), variables('api_version')).InstrumentationKey]",
+			"type": "string"
+		}
+	}
+}

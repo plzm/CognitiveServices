@@ -1,0 +1,12 @@
+{
+  "DomainType": "Classification",
+  "Platform": "DockerFile",
+  "Flavor": "ARM",
+  "ExporterVersion": "2.1",
+  "ExportedDate": "2019-12-10T11:48:15.7010933Z",
+  "IterationId": "682ae52c-ae4a-4686-9ff4-a1b6990505e9",
+  "ModelFileName": "model.pb",
+  "LabelFileName": "labels.txt",
+  "ModelFileSHA1": "758f69a9da12424de85f7f848d2b29772582ed30",
+  "SchemaVersion": "1.0"
+}

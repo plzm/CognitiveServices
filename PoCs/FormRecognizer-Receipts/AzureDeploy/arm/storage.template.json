@@ -1,0 +1,94 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "String",
+            "defaultValue": "",
+            "metadata": {
+                "displayName": "Azure region",
+                "description": "The Azure region within which to deploy. See https://azure.microsoft.com/regions/."
+            }
+        },
+        "storage_account_name_infix": {
+            "type": "String",
+            "defaultValue": "",
+            "metadata": {
+                "displayName": "",
+                "description": ""
+            }
+        },
+        "storage_account_name": {
+            "type": "String",
+            "defaultValue": "[substring(concat(parameters('storage_account_name_infix'), 'diag', uniqueString(utcNow())), 0, 16)]",
+            "metadata": {
+                "displayName": "Storage account name",
+                "description": "Storage account name. If not specified, a unique name based on SA name infix and UTC Now will be created."
+            }
+        }
+    },
+    "variables": {
+        "api_version_storage": "2019-04-01",
+        "storage_account_kind": "StorageV2",
+        "storage_account_sku": "Standard_LRS",
+        "storage_account_tier": "Standard",
+        "storage_access_tier": "Hot"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "[variables('api_version_storage')]",
+            "name": "[parameters('storage_account_name')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[variables('storage_account_sku')]",
+                "tier": "[variables('storage_account_tier')]"
+            },
+            "kind": "[variables('storage_account_kind')]",
+            "properties": {
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "[variables('storage_access_tier')]"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "[variables('api_version_storage')]",
+            "name": "[concat(parameters('storage_account_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": [
+                    ]
+                },
+                "deleteRetentionPolicy": {
+                    "enabled": false
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "storage_account_name": {
+            "type": "string",
+            "value": "[parameters('storage_account_name')]"
+        }
+    }
+}
