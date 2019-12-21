@@ -8,9 +8,9 @@ When a receipt image is uploaded to blob storage, an Event Grid event is raised.
 
 The queue triggers a second Azure Function. That Function retrieves operation metadata from the queue, and checks the status of the referenced receipt processing operation. If the operation has not started or is still running, the Function re-enqueues this receipt's metadata with a timeout before becoming visible on the queue again (to allow the service additional time to complete processing). If the operation succeeded, then all the receipt data is persisted to a SQL database.
 
-This PoC uses receipt images (in the TestImages folder). All of these were sourced from searches on bing.com/images. All images are believed to be in the public domain and free of copyright or other constraints. Please advise if this is incorrect.
+This PoC uses receipt images (in the ReceiptImages folder). All of these were sourced from searches on bing.com/images. All images are believed to be in the public domain and free of copyright or other constraints. Please advise if this is incorrect.
 
-Test images are in the TestReceipts folder. Test results for documents and addresses are in the TestResults folder.
+Test images are in the ReceiptImages folder. Test results for documents and addresses are in the ReceiptResults folder.
 
 Resources:
 * [Form Recognizer Azure AI Cognitive Service Overview](https://docs.microsoft.com/azure/cognitive-services/form-recognizer/overview)
