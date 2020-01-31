@@ -20,7 +20,7 @@
         },
         "storage_account_name": {
             "type": "String",
-            "defaultValue": "[substring(concat(parameters('storage_account_name_infix'), 'diag', uniqueString(utcNow())), 0, 16)]",
+            "defaultValue": "[substring(concat(parameters('storage_account_name_infix'), uniqueString(utcNow())), 0, 16)]",
             "metadata": {
                 "displayName": "Storage account name",
                 "description": "Storage account name. If not specified, a unique name based on SA name infix and UTC Now will be created."
