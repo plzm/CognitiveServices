@@ -6,8 +6,8 @@
 # Azure
 subscription_id="$(az account show -o tsv --query "id")"
 location="eastus"
-external_ips_allowed="PROVIDE"
-azure_alerts_email_address="PROVIDE"
+external_ips_allowed="<PROVIDE>"
+azure_alerts_email_address="<PROVIDE>"
 
 # General
 infix="fr"
@@ -60,7 +60,7 @@ event_grid_subscription_name_hotel_folios="$infix""-blob-hotel-folios-eg"
 
 # Azure SQL
 sql_admin_username="$infix""-sqladmin"
-sql_admin_password="PROVIDE"
+sql_admin_password="<PROVIDE>"
 
 azure_sql_server_template_file="./arm/azuresqlserver.template.json"
 azure_sql_server_name="$infix""-sql-srvr"
@@ -77,7 +77,7 @@ azure_sql_db_bacpac_storage_uri="https://""$storage_acct_name"".blob.core.window
 
 azure_sql_security_role_name="DocumentsRole"  # This MUST match what's in the bacpac/database! Do not change this until/unless you know exactly what you're doing and have changed it in those other places!!!
 azure_sql_user_name="DocumentsUser"
-azure_sql_password="PROVIDE"
+azure_sql_password="<PROVIDE>"
 
 # SQL user and password must match what is in documents.sql/bacpac and is actually deployed
 azure_sql_conn_string="Server=tcp:""$azure_sql_server_name"".database.windows.net,1433;Initial Catalog=""$azure_sql_db_name"";Persist Security Info=False;User ID=""$azure_sql_user_name"";Password=""$azure_sql_password"";MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
@@ -141,12 +141,12 @@ az functionapp create -g $resource_group_name -n $functionapp_name --storage-acc
 echo "Get Function App Resource ID"
 functionapp_resource_id="$(az functionapp show -g $resource_group_name -n $functionapp_name -o tsv --query "id")"
 
-echo "Set Function App to runtime v3"
-az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings FUNCTIONS_EXTENSION_VERSION=~3
+# echo "Set Function App to runtime v3"
+# az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings FUNCTIONS_EXTENSION_VERSION=~3
 
 echo "Configure logging for function app"
-az webapp log config -g $resource_group_name -n $functionapp_name --application-logging true --detailed-error-messages true \
-	--failed-request-tracing true --web-server-logging filesystem --level warning
+az webapp log config -g $resource_group_name -n $functionapp_name --application-logging false --detailed-error-messages false \
+	--failed-request-tracing false --web-server-logging off --level warning
 
 echo "Configure settings for function app"
 az functionapp config set -g $resource_group_name -n $functionapp_name --always-on true --auto-heal-enabled true \
@@ -170,7 +170,7 @@ az role assignment create --scope "$functionapp_msi_scope_storage" --assignee-ob
 az role assignment create --scope "$functionapp_msi_scope_storage" --assignee-object-id "$functionapp_msi_principal_id" --role "$functionapp_msi_role_storage_queue"
 
 
-# Deploy Functions - Get Webhook/Host Key
+# Deploy Functions - Get Webhook/Host
 
 
 # Create Event Grid subscriptions for storage events - need Function Webhook to be live for this
@@ -178,13 +178,21 @@ az role assignment create --scope "$functionapp_msi_scope_storage" --assignee-ob
 ### TODO implement using the key management API, see
 ### https://www.markheath.net/post/managing-azure-function-keys
 ### https://stackoverflow.com/questions/47713942/get-the-default-host-key-for-a-function-app-via-the-cli
-functionapp_eventgrid_host_key="PROVIDE"
+functionapp_eventgrid_host_key="q1ILC4ImsxqfIIQ0eugi44Ov/KAGndnVRgOCRpb6Cz6HI/5pHrLjQw=="
 
 echo "Create Event Grid Subscription for Receipt events - NOTE this is not working yet without hardcoded host key, see sh source"
 az eventgrid event-subscription create --name $event_grid_subscription_name_receipts \
 	--source-resource-id "$storage_acct_resource_id" \
 	--subject-begins-with "/blobServices/default/containers/""$container_name_receipts""/blobs/" \
 	--endpoint "https://""$functionapp_name"".azurewebsites.net/runtime/webhooks/EventGrid?functionName=""$function_name_process_receipt""&code=""$functionapp_eventgrid_host_key"
+
+echo "Create Event Grid Subscription for Hotel Folio events - NOTE this is not working yet without hardcoded host key, see sh source"
+az eventgrid event-subscription create --name $event_grid_subscription_name_hotel_folios \
+	--source-resource-id "$storage_acct_resource_id" \
+	--subject-begins-with "/blobServices/default/containers/""$container_name_hotel_folios""/blobs/" \
+	--endpoint "https://""$functionapp_name"".azurewebsites.net/runtime/webhooks/EventGrid?functionName=""$function_name_process_hotel_folio""&code=""$functionapp_eventgrid_host_key"
+
+
 
 
 echo "Upload bacpac file to import into Azure SQL database"
@@ -207,6 +215,9 @@ az sql db import -g "$resource_group_name" -s "$azure_sql_server_name" -n "$azur
     -u "$sql_admin_username" -p "$sql_admin_password" \
     --storage-uri "$azure_sql_db_bacpac_storage_uri" --storage-key "$azure_storage_acct_key" --storage-key-type "StorageAccessKey"
 
+
+
+
 # az cognitiveservices account list-kinds
 echo "Deploy cognitive services"
 az cognitiveservices account create -l "westus2" -g $resource_group_name -n $cogsvc_form_recognizer_name --kind "FormRecognizer" --sku "S0" --yes --verbose
@@ -215,8 +226,8 @@ az cognitiveservices account create -l "westus2" -g $resource_group_name -n $cog
 # az cognitiveservices account show -g $resource_group_name -n $cogsvc_form_recognizer_name
 
 echo "Get form recognizer cognitive service endpoint and key"
-cogsvc_form_recognizer_endpoint_analyze="$(az cognitiveservices account show -g $resource_group_name -n $cogsvc_form_recognizer_name -o tsv --query "endpoint")""formrecognizer/v2.0-preview/prebuilt/receipt/analyze"
-cogsvc_form_recognizer_endpoint_analyze_results="$(az cognitiveservices account show -g $resource_group_name -n $cogsvc_form_recognizer_name -o tsv --query "endpoint")""formrecognizer/v2.0-preview/prebuilt/receipt/analyzeResults"
+cogsvc_form_recognizer_endpoint_receipt_analyze="$(az cognitiveservices account show -g $resource_group_name -n $cogsvc_form_recognizer_name -o tsv --query "endpoint")""formrecognizer/v2.0-preview/prebuilt/receipt/analyze?includeTextDetails"
+cogsvc_form_recognizer_endpoint_receipt_analyze_results="$(az cognitiveservices account show -g $resource_group_name -n $cogsvc_form_recognizer_name -o tsv --query "endpoint")""formrecognizer/v2.0-preview/prebuilt/receipt/analyzeResults"
 cogsvc_form_recognizer_key="$(az cognitiveservices account keys list -g "$resource_group_name" -n "$cogsvc_form_recognizer_name" -o tsv --query "key1")"
 
 echo "Deploy Azure Maps account"
@@ -232,8 +243,8 @@ az functionapp config appsettings set -g $resource_group_name -n $functionapp_na
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageQueueNameHotelFolios=$queue_name_hotel_folios"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageQueueNameAddresses=$queue_name_addresses"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "SqlConnectionString=$azure_sql_conn_string"
-az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecReceiptAnalyze=$cogsvc_form_recognizer_endpoint_analyze"
-az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecReceiptAnalyzeResults=$cogsvc_form_recognizer_endpoint_analyze_results"
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecReceiptAnalyze=$cogsvc_form_recognizer_endpoint_receipt_analyze"
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecReceiptAnalyzeResults=$cogsvc_form_recognizer_endpoint_receipt_analyze_results"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcApiKeyFormRec=$cogsvc_form_recognizer_key"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "AzureMapsApiEndpoint=$azure_maps_api_endpoint"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "AzureMapsApiVersion=$azure_maps_api_version"

@@ -1,0 +1,307 @@
+{
+	"status": "succeeded",
+	"createdDateTime": "2020-02-06T15:18:32Z",
+	"lastUpdatedDateTime": "2020-02-06T15:18:34Z",
+	"analyzeResult": {
+		"version": "2.0.0",
+		"readResults": [
+			{
+				"page": 1,
+				"angle": 0,
+				"width": 480,
+				"height": 640,
+				"unit": "pixel",
+				"language": "en"
+			}
+		],
+		"documentResults": [
+			{
+				"docType": "prebuilt:receipt",
+				"pageRange": [
+					1,
+					1
+				],
+				"fields": {
+					"ReceiptType": {
+						"type": "string",
+						"valueString": "Itemized",
+						"confidence": 0.986
+					},
+					"MerchantName": {
+						"type": "string",
+						"valueString": "Chick-fil-a",
+						"text": "Chick-fil-a",
+						"boundingBox": [
+							164,
+							139,
+							253.6,
+							142.5,
+							253,
+							159.5,
+							163.3,
+							156
+						],
+						"page": 1,
+						"confidence": 0.915
+					},
+					"MerchantPhoneNumber": {
+						"type": "phoneNumber",
+						"valuePhoneNumber": "+13864781490",
+						"text": "(386) 478-1490",
+						"boundingBox": [
+							157,
+							157.2,
+							269.5,
+							161,
+							269,
+							178.3,
+							156.4,
+							174.5
+						],
+						"page": 1,
+						"confidence": 0.88
+					},
+					"TransactionDate": {
+						"type": "date",
+						"valueDate": "2009-07-10",
+						"text": "7/10/2009",
+						"boundingBox": [
+							141,
+							176,
+							216,
+							178,
+							215.5,
+							195,
+							140.5,
+							193
+						],
+						"page": 1,
+						"confidence": 0.99
+					},
+					"TransactionTime": {
+						"type": "time",
+						"valueTime": "13:33:28",
+						"text": "1:33:28 PM",
+						"boundingBox": [
+							221.5,
+							177.2,
+							300.5,
+							179.5,
+							300,
+							198.3,
+							221,
+							196
+						],
+						"page": 1,
+						"confidence": 0.985
+					},
+					"Items": {
+						"type": "array",
+						"valueArray": [
+							{
+								"type": "object",
+								"valueObject": {
+									"Quantity": {
+										"type": "number",
+										"text": "1",
+										"boundingBox": [
+											49,
+											252,
+											60,
+											252,
+											60,
+											268,
+											49,
+											268
+										],
+										"page": 1,
+										"confidence": 0.917
+									},
+									"Name": {
+										"type": "string",
+										"valueString": "Lg Fry",
+										"text": "Lg Fry",
+										"boundingBox": [
+											73.3,
+											252.5,
+											124,
+											253.5,
+											123.7,
+											270,
+											73,
+											269
+										],
+										"page": 1,
+										"confidence": 0.917
+									},
+									"TotalPrice": {
+										"type": "number",
+										"valueNumber": 1.75,
+										"text": "1.75",
+										"boundingBox": [
+											339.5,
+											256,
+											370.5,
+											255,
+											371,
+											271,
+											340,
+											272
+										],
+										"page": 1,
+										"confidence": 0.916
+									}
+								}
+							},
+							{
+								"type": "object",
+								"valueObject": {
+									"Name": {
+										"type": "string",
+										"valueString": "Kids 4 Nugg ML",
+										"text": "Kids 4 Nugg ML",
+										"boundingBox": [
+											71,
+											270.7,
+											189,
+											272.3,
+											188.8,
+											290.2,
+											70.8,
+											288.6
+										],
+										"page": 1,
+										"confidence": 0.764
+									},
+									"TotalPrice": {
+										"type": "number",
+										"valueNumber": 2.16,
+										"text": "2.16",
+										"boundingBox": [
+											339,
+											275,
+											369.5,
+											274,
+											370,
+											290,
+											339.5,
+											291
+										],
+										"page": 1,
+										"confidence": 0.916
+									}
+								}
+							},
+							{
+								"type": "object",
+								"valueObject": {
+									"Quantity": {
+										"type": "number",
+										"text": "1",
+										"boundingBox": [
+											48,
+											308,
+											59.4,
+											309,
+											58,
+											324,
+											46.6,
+											323
+										],
+										"page": 1,
+										"confidence": 0.916
+									},
+									"Name": {
+										"type": "string",
+										"valueString": "Swt Tea LG",
+										"text": "Swt Tea LG",
+										"boundingBox": [
+											72,
+											310,
+											157,
+											310,
+											157,
+											327,
+											72,
+											327
+										],
+										"page": 1,
+										"confidence": 0.917
+									},
+									"TotalPrice": {
+										"type": "number",
+										"valueNumber": 1.65,
+										"text": "1.65",
+										"boundingBox": [
+											342,
+											312,
+											373,
+											312,
+											373,
+											328,
+											342,
+											328
+										],
+										"page": 1,
+										"confidence": 0.916
+									}
+								}
+							}
+						]
+					},
+					"Subtotal": {
+						"type": "number",
+						"valueNumber": 6.25,
+						"text": "6.25",
+						"boundingBox": [
+							339.5,
+							351,
+							373.5,
+							350,
+							374,
+							366,
+							340,
+							367
+						],
+						"page": 1,
+						"confidence": 0.99
+					},
+					"Tax": {
+						"type": "number",
+						"valueNumber": 0.41,
+						"text": "0.41",
+						"boundingBox": [
+							341,
+							371,
+							373,
+							370,
+							373.5,
+							386,
+							341.5,
+							387
+						],
+						"page": 1,
+						"confidence": 0.99
+					},
+					"Total": {
+						"type": "number",
+						"valueNumber": 6.66,
+						"text": "6.66",
+						"boundingBox": [
+							341,
+							390,
+							376,
+							390,
+							376,
+							406,
+							341,
+							406
+						],
+						"page": 1,
+						"confidence": 0.99
+					}
+				}
+			}
+		]
+	}
+}

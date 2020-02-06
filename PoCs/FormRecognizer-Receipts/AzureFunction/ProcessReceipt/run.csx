@@ -19,31 +19,30 @@ using pelazem.util;
 
 public static async Task<string> Run(EventGridEvent eventGridEvent, ILogger log)
 {
+    log.LogInformation(eventGridEvent.Data.ToString());
+
     // //////////////////////////////////////////////////
     // Get info from app config
-    string sharedAccessPolicyName = Environment.GetEnvironmentVariable("StorageSharedAccessPolicyName");
+    string sharedAccessPolicyNameReceipts = Environment.GetEnvironmentVariable("StorageSharedAccessPolicyNameReceipts");
     string storageAccountName = Environment.GetEnvironmentVariable("StorageAccountName");
     string storageAccountKey = Environment.GetEnvironmentVariable("StorageAccountKey");
-    string cogSvcEndpointFormRec = Environment.GetEnvironmentVariable("CogSvcEndpointFormRec");
+    string cogSvcEndpointFormRecReceiptAnalyze = Environment.GetEnvironmentVariable("CogSvcEndpointFormRecReceiptAnalyze");
     string cogSvcApiKeyFormRec = Environment.GetEnvironmentVariable("CogSvcApiKeyFormRec");
 
-    if (!(cogSvcEndpointFormRec.EndsWith("/")))
-        cogSvcEndpointFormRec += "/";
-
-    // log.LogInformation($"{nameof(sharedAccessPolicyName)} = {sharedAccessPolicyName}");
-    // log.LogInformation($"{nameof(storageAccountName)} = {storageAccountName}");
-    // log.LogInformation($"{nameof(storageAccountKey)} = {storageAccountKey}");
-    // log.LogInformation($"{nameof(cogSvcEndpointFormRec)} = {cogSvcEndpointFormRec}");
-    // log.LogInformation($"{nameof(cogSvcApiKeyFormRec)} = {cogSvcApiKeyFormRec}");
+    log.LogInformation($"{nameof(sharedAccessPolicyNameReceipts)} = {sharedAccessPolicyNameReceipts}");
+    log.LogInformation($"{nameof(storageAccountName)} = {storageAccountName}");
+    log.LogInformation($"{nameof(storageAccountKey)} = {storageAccountKey}");
+    log.LogInformation($"{nameof(cogSvcEndpointFormRecReceiptAnalyze)} = {cogSvcEndpointFormRecReceiptAnalyze}");
+    log.LogInformation($"{nameof(cogSvcApiKeyFormRec)} = {cogSvcApiKeyFormRec}");
     // //////////////////////////////////////////////////
 
     // //////////////////////////////////////////////////
     // Reference: https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.eventgrid.models.eventgridevent?view=azure-dotnet
 
     // The event grid event subject is useful to know if a "subject starts with" filter will be applied to the event grid subscription
-    // log.LogInformation($"{nameof(eventGridEvent.Subject)} = {eventGridEvent.Subject}");
+    log.LogInformation($"{nameof(eventGridEvent.Subject)} = {eventGridEvent.Subject}");
     // Event grid event data
-    // log.LogInformation(eventGridEvent.Data.ToString());
+    log.LogInformation(eventGridEvent.Data.ToString());
 
     // The event data payload is JSON. Let's deserialize it and get our blob API and blob URL.
     string payload = eventGridEvent.Data.ToString();
@@ -74,10 +73,11 @@ public static async Task<string> Run(EventGridEvent eventGridEvent, ILogger log)
 
     Blob blob = new pelazem.azure.storage.Blob();
 
-    string blobSapUrl = await blob.GetBlobSAPUrlFromBlobUrlAsync(storageAccount, blobUrl, sharedAccessPolicyName);
+    string blobSapUrl = await blob.GetBlobSAPUrlFromBlobUrlAsync(storageAccount, blobUrl, sharedAccessPolicyNameReceipts);
 
-    // log.LogInformation($"{nameof(blobSapUrl)} = {blobSapUrl}");
+    log.LogInformation($"{nameof(blobSapUrl)} = {blobSapUrl}");
     // //////////////////////////////////////////////////
+
 
     // //////////////////////////////////////////////////
     // Invoke cognitive services
@@ -85,8 +85,6 @@ public static async Task<string> Run(EventGridEvent eventGridEvent, ILogger log)
     string contentType = "application/json";
 
     // Form Recognizer
-    string urlFormRecAnalyze = cogSvcEndpointFormRec + "asyncBatchAnalyze/";
-
     HttpUtil httpUtilFormRec = new HttpUtil();
     httpUtilFormRec.AddRequestHeader("Ocp-Apim-Subscription-Key", cogSvcApiKeyFormRec);
 
@@ -94,10 +92,10 @@ public static async Task<string> Run(EventGridEvent eventGridEvent, ILogger log)
 
     HttpContent contentFormRec = httpUtilFormRec.GetHttpContent(bodyFormRec, contentType);
 
-    OpResult resultFormRec = await httpUtilFormRec.PostAsync(urlFormRecAnalyze, contentFormRec);
+    OpResult resultFormRec = await httpUtilFormRec.PostAsync(cogSvcEndpointFormRecReceiptAnalyze, contentFormRec);
 
-    // log.LogInformation(resultFormRec.Succeeded.ToString());
-    // log.LogInformation(resultFormRec.Message);
+    log.LogInformation(resultFormRec.Succeeded.ToString());
+    log.LogInformation(resultFormRec.Message);
 
     HttpResponseMessage responseFormRec = resultFormRec.Output as HttpResponseMessage;
 

@@ -50,15 +50,25 @@ CREATE VIEW data.ReceiptsView
 AS
 	SELECT
 		DocumentGuid,
-		Subtotal = ISNULL(JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.Subtotal.value'), 0),
-		Tax = ISNULL(JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.Tax.value'), 0),
-		Total = ISNULL(JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.Total.value'), 0),
-        MerchantName = JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.MerchantName.value'),
-        MerchantAddress = JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.MerchantAddress.value'),
-        MerchantPhoneNumber = JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.MerchantPhoneNumber.value'),
-        TransactionDate = JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.TransactionDate.value'),
-        TransactionTime = JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.TransactionTime.value'),
 		DocumentType,
+        MerchantName = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.MerchantName.text'),
+        MerchantNameConfidence = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.MerchantName.confidence'),
+        MerchantAddress = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.MerchantAddress.text'),
+        MerchantAddressConfidence = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.MerchantAddress.confidence'),
+        MerchantPhoneNumber = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.MerchantPhoneNumber.text'),
+        MerchantPhoneNumberConfidence = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.MerchantPhoneNumber.confidence'),
+		Subtotal = ISNULL(JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.Subtotal.text'), 0),
+		SubtotalConfidence = ISNULL(JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.Subtotal.confidence'), 0),
+		Tax = ISNULL(JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.Tax.text'), 0),
+		TaxConfidence = ISNULL(JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.Tax.confidence'), 0),
+		Total = ISNULL(JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.Total.text'), 0),
+		TotalConfidence = ISNULL(JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.Total.confidence'), 0),
+        TransactionDate = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.TransactionDate.text'),
+        TransactionDateConfidence = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.TransactionDate.confidence'),
+        TransactionTime = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.TransactionTime.text'),
+        TransactionTimeConfidence = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.TransactionTime.confidence'),
+        ReceiptType = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.ReceiptType.valueString'),
+        ReceiptTypeConfidence = JSON_VALUE(DocumentJson, '$.analyzeResult.documentResults[0].fields.ReceiptType.confidence'),
 		ImageUrl,
 		DocumentJson,
 		DateCreated,
@@ -133,24 +143,9 @@ CREATE PROC data.GetReceipts
 AS
 BEGIN
 	SELECT
-		DocumentGuid,
-		Subtotal = ISNULL(JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.Subtotal.value'), 0),
-		Tax = ISNULL(JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.Tax.value'), 0),
-		Total = ISNULL(JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.Total.value'), 0),
-        MerchantName = JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.MerchantName.value'),
-        MerchantAddress = JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.MerchantAddress.value'),
-        MerchantPhoneNumber = JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.MerchantPhoneNumber.value'),
-        TransactionDate = JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.TransactionDate.value'),
-        TransactionTime = JSON_VALUE(DocumentJson, '$.understandingResults[0].fields.TransactionTime.value'),
-		DocumentType,
-		ImageUrl,
-		DocumentJson,
-		DateCreated,
-		DateUpdated
+		*
 	FROM
-		data.Documents
-	WHERE
-		DocumentType = 'Receipt'
+		data.ReceiptsView
 	;
 END
 GO

@@ -40,19 +40,19 @@ public static async Task Run(string queueMessage, ILogger log)
     string storageQueueNameReceipts = Environment.GetEnvironmentVariable("StorageQueueNameReceipts");
     string storageQueueNameAddresses = Environment.GetEnvironmentVariable("StorageQueueNameAddresses");
     string sqlConnectionString = Environment.GetEnvironmentVariable("SqlConnectionString");
-    string cogSvcEndpointFormRec = Environment.GetEnvironmentVariable("CogSvcEndpointFormRec");
+    string cogSvcEndpointFormRecAnalyzeResults = Environment.GetEnvironmentVariable("CogSvcEndpointFormRecReceiptAnalyzeResults");
     string cogSvcApiKeyFormRec = Environment.GetEnvironmentVariable("CogSvcApiKeyFormRec");
 
-    if (!(cogSvcEndpointFormRec.EndsWith("/")))
-        cogSvcEndpointFormRec += "/";
+    if (!(cogSvcEndpointFormRecAnalyzeResults.EndsWith("/")))
+        cogSvcEndpointFormRecAnalyzeResults += "/";
 
-    // log.LogInformation($"{nameof(storageAccountName)} = {storageAccountName}");
-    // log.LogInformation($"{nameof(storageAccountKey)} = {storageAccountKey}");
-    // log.LogInformation($"{nameof(storageQueueNameReceipts)} = {storageQueueNameReceipts}");
-    // log.LogInformation($"{nameof(storageQueueNameAddresses)} = {storageQueueNameAddresses}");
-    // log.LogInformation($"{nameof(sqlConnectionString)} = {sqlConnectionString}");
-    // log.LogInformation($"{nameof(cogSvcEndpointFormRec)} = {cogSvcEndpointFormRec}");
-    // log.LogInformation($"{nameof(cogSvcApiKeyFormRec)} = {cogSvcApiKeyFormRec}");
+    log.LogInformation($"{nameof(storageAccountName)} = {storageAccountName}");
+    log.LogInformation($"{nameof(storageAccountKey)} = {storageAccountKey}");
+    log.LogInformation($"{nameof(storageQueueNameReceipts)} = {storageQueueNameReceipts}");
+    log.LogInformation($"{nameof(storageQueueNameAddresses)} = {storageQueueNameAddresses}");
+    log.LogInformation($"{nameof(sqlConnectionString)} = {sqlConnectionString}");
+    log.LogInformation($"{nameof(cogSvcEndpointFormRecAnalyzeResults)} = {cogSvcEndpointFormRecAnalyzeResults}");
+    log.LogInformation($"{nameof(cogSvcApiKeyFormRec)} = {cogSvcApiKeyFormRec}");
     // //////////////////////////////////////////////////
 
     // //////////////////////////////////////////////////
@@ -71,6 +71,7 @@ public static async Task Run(string queueMessage, ILogger log)
 
     // //////////////////////////////////////////////////
     // Form Recognizer
+    // Reference: https://westus2.dev.cognitive.microsoft.com/docs/services/form-recognizer-api-v2-preview/operations/GetAnalyzeReceiptResult
 
     HttpUtil httpUtilFormRec = new HttpUtil();
     httpUtilFormRec.AddRequestHeader("Ocp-Apim-Subscription-Key", cogSvcApiKeyFormRec);
@@ -81,7 +82,7 @@ public static async Task Run(string queueMessage, ILogger log)
 
 	string responseBody = await httpUtilFormRec.GetHttpResponseContentAsync(responseFormRec);
 
-	// log.LogInformation($"{nameof(responseBody)} = {responseBody}");
+	log.LogInformation($"{nameof(responseBody)} = {responseBody}");
 
     JObject formRecOutput = JObject.Parse(responseBody);
 
@@ -93,7 +94,7 @@ public static async Task Run(string queueMessage, ILogger log)
         Guid documentGuid = await SaveDocument(responseBody, imageUrl, log);
     	log.LogInformation($"{nameof(documentGuid)} = {documentGuid}");
 
-        var address = formRecOutput["understandingResults"][0]["fields"]["MerchantAddress"];
+        var address = formRecOutput["analyzeResult"]["documentResults"][0]["fields"]["MerchantAddress"];
 
         if (address.HasValues)
         {
@@ -110,8 +111,9 @@ public static async Task Run(string queueMessage, ILogger log)
     {
         // Not finished yet - requeue the message with a timeout before becoming visible in the queue
         await RequeueDocument(imageUrl, operationLocation, created, checkCount, log);
-    }
+    }    
 }
+
 
 internal static async Task EnqueueAddress(Guid documentGuid, string address, ILogger log)
 {
