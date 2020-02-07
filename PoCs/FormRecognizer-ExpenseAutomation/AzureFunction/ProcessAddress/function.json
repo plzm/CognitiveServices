@@ -1,0 +1,12 @@
+{
+	"bindings": [
+	  {
+		"name": "queueMessage",
+		"type": "queueTrigger",
+		"direction": "in",
+		"queueName": "addresses-processing",
+		"connection": "AzureWebJobsStorage"
+	  }
+	],
+	"disabled": false
+  }

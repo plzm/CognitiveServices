@@ -21,11 +21,15 @@ storage_acct_name="$infix""procsa"
 storage_acct_sku=Standard_LRS
 container_name_receipts="receipts"
 container_name_hotel_folios="hotel-folios"
+container_name_hotel_folios_train_labeled="hotel-folios-train-labeled"
+container_name_hotel_folios_train_unlabeled="hotel-folios-train-unlabeled"
 container_name_assets="assets"
 
 # Storage access policy
 sap_name_receipts="sap-receipts"
 sap_name_hotel_folios="sap-hotel-folios"
+sap_name_hotel_folios_train_labeled="sap-hotel-folios-train-labeled"
+sap_name_hotel_folios_train_unlabeled="sap-hotel-folios-train-unlabeled"
 sap_start="2020-1-1T00:00:00Z"
 sap_end="2022-1-1T00:00:00Z"
 
@@ -109,11 +113,15 @@ azure_storage_acct_key="$(az storage account keys list -g "$resource_group_name"
 echo "Create storage containers"
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_receipts" --verbose
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_hotel_folios" --verbose
+az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_hotel_folios_train_labeled" --verbose
+az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_hotel_folios_train_unlabeled" --verbose
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_assets" --verbose
 
 echo "Create shared access policy on containers"
 az storage container policy create -c "$container_name_receipts" -n "$sap_name_receipts" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions r --start "$sap_start" --expiry "$sap_end"
 az storage container policy create -c "$container_name_hotel_folios" -n "$sap_name_hotel_folios" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions r --start "$sap_start" --expiry "$sap_end"
+az storage container policy create -c "$container_name_hotel_folios_train_labeled" -n "$sap_name_hotel_folios_train_labeled" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions r --start "$sap_start" --expiry "$sap_end"
+az storage container policy create -c "$container_name_hotel_folios_train_unlabeled" -n "$sap_name_hotel_folios_train_unlabeled" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions r --start "$sap_start" --expiry "$sap_end"
 
 echo "Create storage queues"
 az storage queue create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$queue_name_receipts" --verbose
