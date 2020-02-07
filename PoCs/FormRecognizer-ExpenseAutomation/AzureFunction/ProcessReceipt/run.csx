@@ -23,13 +23,13 @@ public static async Task<string> Run(EventGridEvent eventGridEvent, ILogger log)
 
     // //////////////////////////////////////////////////
     // Get info from app config
-    string sharedAccessPolicyNameReceipts = Environment.GetEnvironmentVariable("StorageSharedAccessPolicyNameReceipts");
+    string sharedAccessPolicyName = Environment.GetEnvironmentVariable("StorageSharedAccessPolicyName");
     string storageAccountName = Environment.GetEnvironmentVariable("StorageAccountName");
     string storageAccountKey = Environment.GetEnvironmentVariable("StorageAccountKey");
     string cogSvcEndpointFormRecReceiptAnalyze = Environment.GetEnvironmentVariable("CogSvcEndpointFormRecReceiptAnalyze");
     string cogSvcApiKeyFormRec = Environment.GetEnvironmentVariable("CogSvcApiKeyFormRec");
 
-    log.LogInformation($"{nameof(sharedAccessPolicyNameReceipts)} = {sharedAccessPolicyNameReceipts}");
+    log.LogInformation($"{nameof(sharedAccessPolicyName)} = {sharedAccessPolicyName}");
     log.LogInformation($"{nameof(storageAccountName)} = {storageAccountName}");
     log.LogInformation($"{nameof(storageAccountKey)} = {storageAccountKey}");
     log.LogInformation($"{nameof(cogSvcEndpointFormRecReceiptAnalyze)} = {cogSvcEndpointFormRecReceiptAnalyze}");
@@ -73,7 +73,7 @@ public static async Task<string> Run(EventGridEvent eventGridEvent, ILogger log)
 
     Blob blob = new pelazem.azure.storage.Blob();
 
-    string blobSapUrl = await blob.GetBlobSAPUrlFromBlobUrlAsync(storageAccount, blobUrl, sharedAccessPolicyNameReceipts);
+    string blobSapUrl = await blob.GetBlobSAPUrlFromBlobUrlAsync(storageAccount, blobUrl, sharedAccessPolicyName);
 
     log.LogInformation($"{nameof(blobSapUrl)} = {blobSapUrl}");
     // //////////////////////////////////////////////////

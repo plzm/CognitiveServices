@@ -26,12 +26,11 @@ container_name_hotel_folios_train_unlabeled="hotel-folios-train-unlabeled"
 container_name_assets="assets"
 
 # Storage access policy
-sap_name_receipts="sap-receipts"
-sap_name_hotel_folios="sap-hotel-folios"
-sap_name_hotel_folios_train_labeled="sap-hotel-folios-train-labeled"
-sap_name_hotel_folios_train_unlabeled="sap-hotel-folios-train-unlabeled"
+sap_name="sap-read-list"
+sap_permissions="rl"
 sap_start="2020-1-1T00:00:00Z"
-sap_end="2022-1-1T00:00:00Z"
+sap_end="2023-1-1T00:00:00Z"
+sas_name_hotel_folios_train_unlabeled="sas-hotel-folios-train-unlabeled"
 
 # Storage queues
 queue_name_receipts="receipts"
@@ -110,6 +109,9 @@ storage_acct_resource_id="$(az storage account show -g "$resource_group_name" -n
 echo "Get storage account key"
 azure_storage_acct_key="$(az storage account keys list -g "$resource_group_name" -n "$storage_acct_name" -o tsv --query "[0].value")"
 
+echo "Get storage account blob endpoint"
+storage_acct_endpoint_blob="$(az storage account show -n "$storage_acct_name" -o tsv --query primaryEndpoints.blob)"
+
 echo "Create storage containers"
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_receipts" --verbose
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_hotel_folios" --verbose
@@ -118,10 +120,16 @@ az storage container create --account-name "$storage_acct_name" --account-key "$
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_assets" --verbose
 
 echo "Create shared access policy on containers"
-az storage container policy create -c "$container_name_receipts" -n "$sap_name_receipts" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions r --start "$sap_start" --expiry "$sap_end"
-az storage container policy create -c "$container_name_hotel_folios" -n "$sap_name_hotel_folios" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions r --start "$sap_start" --expiry "$sap_end"
-az storage container policy create -c "$container_name_hotel_folios_train_labeled" -n "$sap_name_hotel_folios_train_labeled" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions r --start "$sap_start" --expiry "$sap_end"
-az storage container policy create -c "$container_name_hotel_folios_train_unlabeled" -n "$sap_name_hotel_folios_train_unlabeled" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions r --start "$sap_start" --expiry "$sap_end"
+az storage container policy create -c "$container_name_receipts" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
+az storage container policy create -c "$container_name_hotel_folios" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
+az storage container policy create -c "$container_name_hotel_folios_train_labeled" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
+az storage container policy create -c "$container_name_hotel_folios_train_unlabeled" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
+
+echo "Get shared access signature for unlabeled train container"
+sas_hotel_folios_train_unlabeled="$(az storage container generate-sas -n ""$sas_name_hotel_folios_train_unlabeled"" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --policy-name $sap_name -o tsv)"
+
+echo "Get SAS URL for unlabeled train container"
+sas_url_hotel_folios_train_unlabeled="$storage_acct_endpoint_blob""$container_name_hotel_folios_train_unlabeled""?""$sas_hotel_folios_train_unlabeled"
 
 echo "Create storage queues"
 az storage queue create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$queue_name_receipts" --verbose
@@ -233,18 +241,19 @@ az cognitiveservices account create -l "westus2" -g $resource_group_name -n $cog
 # echo "Show cognitive services"
 # az cognitiveservices account show -g $resource_group_name -n $cogsvc_form_recognizer_name
 
-echo "Get form recognizer cognitive service endpoint and key"
-cogsvc_form_recognizer_endpoint_receipt_analyze="$(az cognitiveservices account show -g $resource_group_name -n $cogsvc_form_recognizer_name -o tsv --query "endpoint")""formrecognizer/v2.0-preview/prebuilt/receipt/analyze?includeTextDetails"
-cogsvc_form_recognizer_endpoint_receipt_analyze_results="$(az cognitiveservices account show -g $resource_group_name -n $cogsvc_form_recognizer_name -o tsv --query "endpoint")""formrecognizer/v2.0-preview/prebuilt/receipt/analyzeResults"
+echo "Get form recognizer cognitive service endpoints and key"
 cogsvc_form_recognizer_key="$(az cognitiveservices account keys list -g "$resource_group_name" -n "$cogsvc_form_recognizer_name" -o tsv --query "key1")"
+cogsvc_form_recognizer_endpoint_root="$(az cognitiveservices account show -g $resource_group_name -n $cogsvc_form_recognizer_name -o tsv --query "endpoint")""formrecognizer/v2.0-preview/"
+cogsvc_form_recognizer_endpoint_receipt_analyze="$cogsvc_form_recognizer_endpoint_root""prebuilt/receipt/analyze?includeTextDetails"
+cogsvc_form_recognizer_endpoint_receipt_analyze_results="$cogsvc_form_recognizer_endpoint_root""prebuilt/receipt/analyzeResults"
+cogsvc_form_recognizer_endpoint_custom_unlabeled_train="$cogsvc_form_recognizer_endpoint_root""custom/models"
 
 echo "Deploy Azure Maps account"
 az maps account create -g "$resource_group_name" -n "$azure_maps_account_name" --accept-tos --sku S0 --verbose
 azure_maps_api_key="$(az maps account keys list -g "$resource_group_name" -n "$azure_maps_account_name" -o tsv --query "primaryKey")"
 
 echo "Set Function App settings"
-az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageSharedAccessPolicyNameReceipts=$sap_name_receipts"
-az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageSharedAccessPolicyNameHotelFolios=$sap_name_hotel_folios"
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageSharedAccessPolicyName=$sap_name"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageAccountName=$storage_acct_name"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageAccountKey=$azure_storage_acct_key"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageQueueNameReceipts=$queue_name_receipts"
@@ -253,8 +262,9 @@ az functionapp config appsettings set -g $resource_group_name -n $functionapp_na
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "SqlConnectionString=$azure_sql_conn_string"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecReceiptAnalyze=$cogsvc_form_recognizer_endpoint_receipt_analyze"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecReceiptAnalyzeResults=$cogsvc_form_recognizer_endpoint_receipt_analyze_results"
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecCustomUnlabeledTrain=$cogsvc_form_recognizer_endpoint_custom_unlabeled_train"
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "SasUrlCustomUnlabeledTrainSource=$sas_url_hotel_folios_train_unlabeled"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcApiKeyFormRec=$cogsvc_form_recognizer_key"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "AzureMapsApiEndpoint=$azure_maps_api_endpoint"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "AzureMapsApiVersion=$azure_maps_api_version"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "AzureMapsApiKey=$azure_maps_api_key"
-
