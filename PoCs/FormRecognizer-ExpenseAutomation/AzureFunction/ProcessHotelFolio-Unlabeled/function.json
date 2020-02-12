@@ -1,0 +1,17 @@
+{
+	"bindings": [
+	  {
+		"type": "eventGridTrigger",
+		"name": "eventGridEvent",
+		"direction": "in"
+	  },
+	  {
+		"type": "queue",
+		"name": "$return",
+		"queueName": "hotel-folios-unlabeled",
+		"connection": "AzureWebJobsStorage",
+		"direction": "out"
+	  }
+	],
+	"disabled": false
+  }

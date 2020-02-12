@@ -30,20 +30,32 @@ public static async Task<IActionResult> Run(HttpRequest req, ILogger log)
     // Get info from app config
     string storageAccountName = Environment.GetEnvironmentVariable("StorageAccountName");
     string storageAccountKey = Environment.GetEnvironmentVariable("StorageAccountKey");
-    // string sharedAccessPolicyName = Environment.GetEnvironmentVariable("StorageSharedAccessPolicyName");
+    
+    string sharedAccessPolicyName = Environment.GetEnvironmentVariable("StorageSharedAccessPolicyName");
+
+    string containerNameHotelFoliosTrainUnlabeled = Environment.GetEnvironmentVariable("ContainerNameHotelFoliosTrainUnlabeled");
 
     string cogSvcApiKeyFormRec = Environment.GetEnvironmentVariable("CogSvcApiKeyFormRec");
     string cogSvcEndpointFormRecCustomUnlabeledTrain = Environment.GetEnvironmentVariable("CogSvcEndpointFormRecCustomUnlabeledTrain");
-    string sasUrlCustomUnlabeledTrainSource = Environment.GetEnvironmentVariable("SasUrlCustomUnlabeledTrainSource");
-
 
     log.LogInformation($"{nameof(storageAccountName)} = {storageAccountName}");
     log.LogInformation($"{nameof(storageAccountKey)} = {storageAccountKey}");
-    // log.LogInformation($"{nameof(sharedAccessPolicyName)} = {sharedAccessPolicyName}");
+
+    log.LogInformation($"{nameof(sharedAccessPolicyName)} = {sharedAccessPolicyName}");
+
+    log.LogInformation($"{nameof(containerNameHotelFoliosTrainUnlabeled)} = {containerNameHotelFoliosTrainUnlabeled}");
 
     log.LogInformation($"{nameof(cogSvcApiKeyFormRec)} = {cogSvcApiKeyFormRec}");
     log.LogInformation($"{nameof(cogSvcEndpointFormRecCustomUnlabeledTrain)} = {cogSvcEndpointFormRecCustomUnlabeledTrain}");
-    log.LogInformation($"{nameof(sasUrlCustomUnlabeledTrainSource)} = {sasUrlCustomUnlabeledTrainSource}");
+    // //////////////////////////////////////////////////
+
+    // //////////////////////////////////////////////////
+    // Source container URL Prep
+    StorageCredentials cred = new StorageCredentials(storageAccountName, storageAccountKey);
+    CloudStorageAccount sa = pelazem.azure.storage.Common.GetStorageAccount(cred);
+	Blob blob = new pelazem.azure.storage.Blob();
+    string url = await blob.GetContainerSAPUrlAsync(sa, containerNameHotelFoliosTrainUnlabeled, sharedAccessPolicyName);
+    log.LogInformation($"{nameof(url)}={url}");
     // //////////////////////////////////////////////////
 
     // //////////////////////////////////////////////////
@@ -54,7 +66,7 @@ public static async Task<IActionResult> Run(HttpRequest req, ILogger log)
     HttpUtil httpUtilFormRec = new HttpUtil();
     httpUtilFormRec.AddRequestHeader("Ocp-Apim-Subscription-Key", cogSvcApiKeyFormRec);
 
-    string bodyFormRec = $"{{\"source\":\"{sasUrlCustomUnlabeledTrainSource}\"}}";
+    string bodyFormRec = $"{{\"source\":\"{url}\"}}";
 
     HttpContent contentFormRec = httpUtilFormRec.GetHttpContent(bodyFormRec, contentType);
 
@@ -65,9 +77,14 @@ public static async Task<IActionResult> Run(HttpRequest req, ILogger log)
 
     HttpResponseMessage responseFormRec = resultFormRec.Output as HttpResponseMessage;
 
-    string modelId = responseFormRec?.Headers?.GetValues("Location")?.First();
+    string location = responseFormRec?.Headers?.GetValues("Location")?.First();
+    string[] delims = {"/"};
+    string[] rawParts = location.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+    string modelId = rawParts.LastOrDefault();
+    
     log.LogInformation($"{nameof(modelId)} = {modelId}");
     // //////////////////////////////////////////////////
 
+    // PERSIST THIS! YOU WILL NEED IT FOR ANALYZE AND ANALYZE RESULTS CALLS
     return (ActionResult)new OkObjectResult(modelId);
 }

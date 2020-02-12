@@ -1,0 +1,12 @@
+{
+	"bindings": [
+	  {
+		"name": "queueMessage",
+		"type": "queueTrigger",
+		"direction": "in",
+		"queueName": "hotel-folios-unlabeled",
+		"connection": "AzureWebJobsStorage"
+	  }
+	],
+	"disabled": false
+  }

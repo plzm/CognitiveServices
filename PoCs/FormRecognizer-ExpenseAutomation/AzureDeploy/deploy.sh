@@ -1,13 +1,17 @@
 #!/bin/bash
 
 # ##################################################
+# NOTE YOU MUST REPLACE THE TOKEN ==PROVIDE== BELOW BEFORE RUNNING
+# ##################################################
+
+# ##################################################
 # Variables
 
 # Azure
 subscription_id="$(az account show -o tsv --query "id")"
 location="eastus"
-external_ips_allowed="<PROVIDE>"
-azure_alerts_email_address="<PROVIDE>"
+external_ips_allowed="==PROVIDE=="
+azure_alerts_email_address="==PROVIDE=="
 
 # General
 infix="fr"
@@ -20,7 +24,7 @@ storage_template_file="./arm/storage.template.json"
 storage_acct_name="$infix""procsa"
 storage_acct_sku=Standard_LRS
 container_name_receipts="receipts"
-container_name_hotel_folios="hotel-folios"
+container_name_hotel_folios_unlabeled="hotel-folios-unlabeled"
 container_name_hotel_folios_train_labeled="hotel-folios-train-labeled"
 container_name_hotel_folios_train_unlabeled="hotel-folios-train-unlabeled"
 container_name_assets="assets"
@@ -34,7 +38,7 @@ sas_name_hotel_folios_train_unlabeled="sas-hotel-folios-train-unlabeled"
 
 # Storage queues
 queue_name_receipts="receipts"
-queue_name_hotel_folios="hotel-folios"
+queue_name_hotel_folios_unlabeled="hotel-folios-unlabeled"
 queue_name_addresses="addresses"
 
 # App service plan
@@ -63,7 +67,7 @@ event_grid_subscription_name_hotel_folios="$infix""-blob-hotel-folios-eg"
 
 # Azure SQL
 sql_admin_username="$infix""-sqladmin"
-sql_admin_password="<PROVIDE>"
+sql_admin_password="==PROVIDE=="
 
 azure_sql_server_template_file="./arm/azuresqlserver.template.json"
 azure_sql_server_name="$infix""-sql-srvr"
@@ -80,7 +84,7 @@ azure_sql_db_bacpac_storage_uri="https://""$storage_acct_name"".blob.core.window
 
 azure_sql_security_role_name="DocumentsRole"  # This MUST match what's in the bacpac/database! Do not change this until/unless you know exactly what you're doing and have changed it in those other places!!!
 azure_sql_user_name="DocumentsUser"
-azure_sql_password="<PROVIDE>"
+azure_sql_password="==PROVIDE=="
 
 # SQL user and password must match what is in documents.sql/bacpac and is actually deployed
 azure_sql_conn_string="Server=tcp:""$azure_sql_server_name"".database.windows.net,1433;Initial Catalog=""$azure_sql_db_name"";Persist Security Info=False;User ID=""$azure_sql_user_name"";Password=""$azure_sql_password"";MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
@@ -114,14 +118,14 @@ storage_acct_endpoint_blob="$(az storage account show -n "$storage_acct_name" -o
 
 echo "Create storage containers"
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_receipts" --verbose
-az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_hotel_folios" --verbose
+az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_hotel_folios_unlabeled" --verbose
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_hotel_folios_train_labeled" --verbose
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_hotel_folios_train_unlabeled" --verbose
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_assets" --verbose
 
 echo "Create shared access policy on containers"
 az storage container policy create -c "$container_name_receipts" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
-az storage container policy create -c "$container_name_hotel_folios" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
+az storage container policy create -c "$container_name_hotel_folios_unlabeled" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
 az storage container policy create -c "$container_name_hotel_folios_train_labeled" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
 az storage container policy create -c "$container_name_hotel_folios_train_unlabeled" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
 
@@ -129,11 +133,11 @@ echo "Get shared access signature for unlabeled train container"
 sas_hotel_folios_train_unlabeled="$(az storage container generate-sas -n ""$sas_name_hotel_folios_train_unlabeled"" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --policy-name $sap_name -o tsv)"
 
 echo "Get SAS URL for unlabeled train container"
-sas_url_hotel_folios_train_unlabeled="$storage_acct_endpoint_blob""$container_name_hotel_folios_train_unlabeled""?""$sas_hotel_folios_train_unlabeled"
+sas_url_hotel_folios_train_unlabeled="$storage_acct_endpoint_blob""$container_name_hotel_folios_train_unlabeled""?restype=container&comp=list&""$sas_hotel_folios_train_unlabeled"
 
 echo "Create storage queues"
 az storage queue create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$queue_name_receipts" --verbose
-az storage queue create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$queue_name_hotel_folios" --verbose
+az storage queue create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$queue_name_hotel_folios_unlabeled" --verbose
 az storage queue create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$queue_name_addresses" --verbose
 
 # Create app service plan
@@ -194,7 +198,7 @@ az role assignment create --scope "$functionapp_msi_scope_storage" --assignee-ob
 ### TODO implement using the key management API, see
 ### https://www.markheath.net/post/managing-azure-function-keys
 ### https://stackoverflow.com/questions/47713942/get-the-default-host-key-for-a-function-app-via-the-cli
-functionapp_eventgrid_host_key="q1ILC4ImsxqfIIQ0eugi44Ov/KAGndnVRgOCRpb6Cz6HI/5pHrLjQw=="
+functionapp_eventgrid_host_key="==PROVIDE== from implementation described in preceding comments"
 
 echo "Create Event Grid Subscription for Receipt events - NOTE this is not working yet without hardcoded host key, see sh source"
 az eventgrid event-subscription create --name $event_grid_subscription_name_receipts \
@@ -205,7 +209,7 @@ az eventgrid event-subscription create --name $event_grid_subscription_name_rece
 echo "Create Event Grid Subscription for Hotel Folio events - NOTE this is not working yet without hardcoded host key, see sh source"
 az eventgrid event-subscription create --name $event_grid_subscription_name_hotel_folios \
 	--source-resource-id "$storage_acct_resource_id" \
-	--subject-begins-with "/blobServices/default/containers/""$container_name_hotel_folios""/blobs/" \
+	--subject-begins-with "/blobServices/default/containers/""$container_name_hotel_folios_unlabeled""/blobs/" \
 	--endpoint "https://""$functionapp_name"".azurewebsites.net/runtime/webhooks/EventGrid?functionName=""$function_name_process_hotel_folio""&code=""$functionapp_eventgrid_host_key"
 
 
@@ -247,24 +251,44 @@ cogsvc_form_recognizer_endpoint_root="$(az cognitiveservices account show -g $re
 cogsvc_form_recognizer_endpoint_receipt_analyze="$cogsvc_form_recognizer_endpoint_root""prebuilt/receipt/analyze?includeTextDetails"
 cogsvc_form_recognizer_endpoint_receipt_analyze_results="$cogsvc_form_recognizer_endpoint_root""prebuilt/receipt/analyzeResults"
 cogsvc_form_recognizer_endpoint_custom_unlabeled_train="$cogsvc_form_recognizer_endpoint_root""custom/models"
+cogsvc_form_recognizer_endpoint_hotel_folio_analyze="$cogsvc_form_recognizer_endpoint_root""custom/models/MODELID/analyze"
+cogsvc_form_recognizer_endpoint_hotel_folio_analyze_results="$cogsvc_form_recognizer_endpoint_root""custom/models/MODELID/analyzeResults"
 
 echo "Deploy Azure Maps account"
 az maps account create -g "$resource_group_name" -n "$azure_maps_account_name" --accept-tos --sku S0 --verbose
 azure_maps_api_key="$(az maps account keys list -g "$resource_group_name" -n "$azure_maps_account_name" -o tsv --query "primaryKey")"
 
 echo "Set Function App settings"
-az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageSharedAccessPolicyName=$sap_name"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageAccountName=$storage_acct_name"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageAccountKey=$azure_storage_acct_key"
+
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageQueueNameReceipts=$queue_name_receipts"
-az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageQueueNameHotelFolios=$queue_name_hotel_folios"
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageQueueNameHotelFoliosUnlabeled=$queue_name_hotel_folios_unlabeled"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageQueueNameAddresses=$queue_name_addresses"
-az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "SqlConnectionString=$azure_sql_conn_string"
+
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageSharedAccessPolicyName=$sap_name"
+
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "ContainerNameHotelFoliosTrainUnlabeled=$container_name_hotel_folios_train_unlabeled"
+
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcApiKeyFormRec=$cogsvc_form_recognizer_key"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecReceiptAnalyze=$cogsvc_form_recognizer_endpoint_receipt_analyze"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecReceiptAnalyzeResults=$cogsvc_form_recognizer_endpoint_receipt_analyze_results"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecCustomUnlabeledTrain=$cogsvc_form_recognizer_endpoint_custom_unlabeled_train"
-az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "SasUrlCustomUnlabeledTrainSource=$sas_url_hotel_folios_train_unlabeled"
-az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcApiKeyFormRec=$cogsvc_form_recognizer_key"
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecHotelFolioAnalyze=$cogsvc_form_recognizer_endpoint_hotel_folio_analyze"
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcEndpointFormRecHotelFolioAnalyzeResults=$cogsvc_form_recognizer_endpoint_hotel_folio_analyze_results"
+
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "SqlConnectionString=$azure_sql_conn_string"
+
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "AzureMapsApiEndpoint=$azure_maps_api_endpoint"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "AzureMapsApiVersion=$azure_maps_api_version"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "AzureMapsApiKey=$azure_maps_api_key"
+
+
+
+### TRAIN UNLABELED CUSTOM FORM RECOGNIZER
+# To do this, see/run the "TrainCustomUnlabeled" function in the Function App deployed above
+
+# Get the model ID and set it to app settings
+cogsvc_form_recognizer_model_id_unlabeled="==PROVIDE=="
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcFormRecModelIdUnlabeled=$cogsvc_form_recognizer_model_id_unlabeled"
+
