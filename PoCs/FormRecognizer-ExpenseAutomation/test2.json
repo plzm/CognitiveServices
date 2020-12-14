@@ -1,0 +1,17 @@
+{
+	"modelInfo": {
+		"modelId": "REMOVED",
+		"status": "invalid",
+		"createdDateTime": "2020-02-13T19:47:25Z",
+		"lastUpdatedDateTime": "2020-02-13T19:47:25Z"
+	},
+	"trainResult": {
+		"averageModelAccuracy": 0.0,
+		"errors": [
+			{
+				"code": "2011",
+				"message": "Could not access Azure blob storage account."
+			}
+		]
+	}
+}

@@ -23,7 +23,7 @@ public static async Task<string> Run(EventGridEvent eventGridEvent, ILogger log)
 
     // //////////////////////////////////////////////////
     // Get info from app config
-    string sharedAccessPolicyName = Environment.GetEnvironmentVariable("StorageSharedAccessPolicyName");
+    string sharedAccessPolicyName = Environment.GetEnvironmentVariable("StorageSharedAccessPolicyNameReadList");
     string storageAccountName = Environment.GetEnvironmentVariable("StorageAccountName");
     string storageAccountKey = Environment.GetEnvironmentVariable("StorageAccountKey");
     string cogSvcEndpointFormRecReceiptAnalyze = Environment.GetEnvironmentVariable("CogSvcEndpointFormRecReceiptAnalyze");

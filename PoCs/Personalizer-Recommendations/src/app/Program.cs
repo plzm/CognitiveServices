@@ -10,7 +10,7 @@ namespace PersonalizerPoC
 	{
 		// Eventually load these from some config repo
 		public const string ENDPOINT = "https://pzpersonalizer.cognitiveservices.azure.com/";
-		public const string APIKEY = "e9a10ae595c7443ca3287bec5ca3198d";
+		public const string APIKEY = "";
 
 		public const bool SCOREHALFREWARDS = false;
 		public const int HOWMANYACTIONS = 5;

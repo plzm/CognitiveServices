@@ -30,8 +30,10 @@ container_name_hotel_folios_train_unlabeled="hotel-folios-train-unlabeled"
 container_name_assets="assets"
 
 # Storage access policy
-sap_name="sap-read-list"
-sap_permissions="rl"
+sap_name_rl="sap-read-list"
+sap_permissions_rl="rl"
+sap_name_full="sap-full"
+sap_permissions_full="racwdl"
 sap_start="2020-1-1T00:00:00Z"
 sap_end="2023-1-1T00:00:00Z"
 sas_name_hotel_folios_train_unlabeled="sas-hotel-folios-train-unlabeled"
@@ -117,20 +119,20 @@ echo "Get storage account blob endpoint"
 storage_acct_endpoint_blob="$(az storage account show -n "$storage_acct_name" -o tsv --query primaryEndpoints.blob)"
 
 echo "Create storage containers"
+az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_assets" --verbose
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_receipts" --verbose
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_hotel_folios_unlabeled" --verbose
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_hotel_folios_train_labeled" --verbose
 az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_hotel_folios_train_unlabeled" --verbose
-az storage container create --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" -n "$container_name_assets" --verbose
 
 echo "Create shared access policy on containers"
-az storage container policy create -c "$container_name_receipts" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
-az storage container policy create -c "$container_name_hotel_folios_unlabeled" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
-az storage container policy create -c "$container_name_hotel_folios_train_labeled" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
-az storage container policy create -c "$container_name_hotel_folios_train_unlabeled" -n "$sap_name" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions rl --start "$sap_start" --expiry "$sap_end"
+az storage container policy create -c "$container_name_receipts" -n "$sap_name_rl" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions "$sap_permissions_rl" --start "$sap_start" --expiry "$sap_end"
+az storage container policy create -c "$container_name_hotel_folios_unlabeled" -n "$sap_name_rl" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions "$sap_permissions_rl" --start "$sap_start" --expiry "$sap_end"
+az storage container policy create -c "$container_name_hotel_folios_train_unlabeled" -n "$sap_name_rl" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions "$sap_permissions_rl" --start "$sap_start" --expiry "$sap_end"
+az storage container policy create -c "$container_name_hotel_folios_train_labeled" -n "$sap_name_full" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --permissions "$sap_permissions_full" --start "$sap_start" --expiry "$sap_end"
 
 echo "Get shared access signature for unlabeled train container"
-sas_hotel_folios_train_unlabeled="$(az storage container generate-sas -n ""$sas_name_hotel_folios_train_unlabeled"" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --policy-name $sap_name -o tsv)"
+sas_hotel_folios_train_unlabeled="$(az storage container generate-sas -n "$sas_name_hotel_folios_train_unlabeled" --account-name "$storage_acct_name" --account-key "$azure_storage_acct_key" --policy-name $sap_name_read_list -o tsv)"
 
 echo "Get SAS URL for unlabeled train container"
 sas_url_hotel_folios_train_unlabeled="$storage_acct_endpoint_blob""$container_name_hotel_folios_train_unlabeled""?restype=container&comp=list&""$sas_hotel_folios_train_unlabeled"
@@ -266,7 +268,8 @@ az functionapp config appsettings set -g $resource_group_name -n $functionapp_na
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageQueueNameHotelFoliosUnlabeled=$queue_name_hotel_folios_unlabeled"
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageQueueNameAddresses=$queue_name_addresses"
 
-az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageSharedAccessPolicyName=$sap_name"
+az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageSharedAccessPolicyNameReadList=$sap_name_rl"
+# az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "StorageSharedAccessPolicyNameFull=$sap_name_full"
 
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "ContainerNameHotelFoliosTrainUnlabeled=$container_name_hotel_folios_train_unlabeled"
 
@@ -287,8 +290,13 @@ az functionapp config appsettings set -g $resource_group_name -n $functionapp_na
 
 ### TRAIN UNLABELED CUSTOM FORM RECOGNIZER
 # To do this, see/run the "TrainCustomUnlabeled" function in the Function App deployed above
+# Reference: https://docs.microsoft.com/en-us/azure/cognitive-services/form-recognizer/quickstarts/curl-train-extract
 
 # Get the model ID and set it to app settings
 cogsvc_form_recognizer_model_id_unlabeled="==PROVIDE=="
 az functionapp config appsettings set -g $resource_group_name -n $functionapp_name --settings "CogSvcFormRecModelIdUnlabeled=$cogsvc_form_recognizer_model_id_unlabeled"
+
+
+### TRAIN LABELED CUSTOM FORM RECOGNIZER
+# To do this, follow the steps at https://docs.microsoft.com/en-us/azure/cognitive-services/form-recognizer/quickstarts/label-tool
 

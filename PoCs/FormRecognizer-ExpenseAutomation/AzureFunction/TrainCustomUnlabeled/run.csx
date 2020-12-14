@@ -31,7 +31,7 @@ public static async Task<IActionResult> Run(HttpRequest req, ILogger log)
     string storageAccountName = Environment.GetEnvironmentVariable("StorageAccountName");
     string storageAccountKey = Environment.GetEnvironmentVariable("StorageAccountKey");
     
-    string sharedAccessPolicyName = Environment.GetEnvironmentVariable("StorageSharedAccessPolicyName");
+    string sharedAccessPolicyName = Environment.GetEnvironmentVariable("StorageSharedAccessPolicyNameReadList");
 
     string containerNameHotelFoliosTrainUnlabeled = Environment.GetEnvironmentVariable("ContainerNameHotelFoliosTrainUnlabeled");
 
