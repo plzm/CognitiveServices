@@ -9,16 +9,16 @@ namespace PersonalizerPoC
 	class Program
 	{
 		// Eventually load these from some config repo
-		public const string ENDPOINT = "https://pzpersonalizer.cognitiveservices.azure.com/";
-		public const string APIKEY = "";
+		public const string ENDPOINT = "https://PROVIDE.cognitiveservices.azure.com/";
+		public const string APIKEY = "PROVIDE";
 
-		public const bool SCOREHALFREWARDS = false;
+		public const bool SCOREHALFREWARDS = true;
 		public const int HOWMANYACTIONS = 5;
 		public const int HOWMANYUSERCONTEXTS = 1000;
 		public const int HOWMANYUSERSPERSEGMENT = 100;
-		public const int SEGMENTPAUSEMILLISECONDS = 60000;
+		public const int SEGMENTPAUSEMILLISECONDS = 90000;
 
-		public const string OUTPUTPATH = @"c:\PoCs\personalizer\";
+		public const string OUTPUTPATH = "";
 
 
 		static void Main(string[] args)
